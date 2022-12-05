@@ -15,7 +15,7 @@ global_defs {
 
 vrrp_instance {{ ansible_host }} {
     state MASTER
-    interface enp0s8
+    interface {{ cluster_interface }}
     virtual_router_id 101
     priority {{ vrrp_pri }}
     advert_int 1
