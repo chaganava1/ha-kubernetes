@@ -1,0 +1,21 @@
+---
+  ###
+  # Set Keep alived to track HAProxy
+  #
+
+- name: Add HAProxy tracking to VRRP configuration
+  blockinfile:
+    path: /etc/keepalived/keepalived.conf
+    marker: "{{ item.marker }}"
+    block: "{{ item.block }}"
+  with_items:
+  - marker: "# {mark} VRRP_SCRIPT"
+    block: "{{ lookup('template', 'vrrp_script.j2') }}"
+  - marker: "# {mark} TRACK_SCRIPT"
+    block: "{{ lookup('template', 'track_script.j2') }}"
+
+- name: Restart VRRP
+  become: true
+  service:
+    name: keepalived
+    state: restarted

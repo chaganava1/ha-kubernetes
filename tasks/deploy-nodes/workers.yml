@@ -1,0 +1,16 @@
+---
+
+###
+# Join the workers to the cluster. 
+#
+
+- name: Check if workers have already joined the cluster
+  stat:
+    path: "/etc/kubernetes/pki/ca.crt"
+  register: joined
+  tags: join
+
+- name: Join the workers to the cluster
+  command: "{{ hostvars[vars['lead_controller']]['worker_join_command'].stdout_lines[0] }}"
+  when: not joined.stat.exists
+  tags: join

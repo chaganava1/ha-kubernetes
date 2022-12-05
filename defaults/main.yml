@@ -1,0 +1,69 @@
+###
+# Networking Options
+# 
+# - All nodes must be on the same subnet. 
+# - api_endpoint is used by VRRP as a virtual IP for the API Server
+# - api_port is the port exposed by HAProxy
+#
+
+api_endpoint: "192.168.60.100"
+api_port: 8443
+vrrp_pri: 100
+
+###
+# Allow pods to run on the controller nodes by setting to false
+#
+
+taint_controllers: true
+
+###
+# Set hosts ~/.kube/config
+#
+
+set_host_kubeconfig: false
+host_kubeconfig_dest: ~/.kube/config
+
+###
+#   Vagrant streamlining:
+#
+#     Quicker, maybe out of date packages:
+#       - skip_install_packages: true 
+#       - Use VagrantBox: gadgieOps/focal-k8s
+#
+#     Slower, up to date packages:
+#       - skip_install_packages: false 
+#       - Use VagrantBox ubuntu/focal64
+#
+#    When not using vagrant, use skip_packages_install: false
+#
+
+skip_packages_install: false
+
+###
+# Exits role early, used when building the gadgieOps/focal-k8s vagrant box.
+#
+
+build_base_image: false
+
+###
+# Optional Extras
+#
+
+# Metrics Server
+# Gathering if metics for nodes and pods etc
+# - https://github.com/kubernetes-sigs/metrics-server
+
+install_metrics_server: false
+
+# NFS Provisioner
+# Installs NFS Subdir External Provisioner for dynamic provisioning of NFS storage
+# - https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+
+install_nfs_provisioner: false
+nfs_subnet: "192.168.60.0/24"
+
+# Metallb
+# Allows us to ex###pose a virtual IP to the host network in the same way as we would on a CSP
+# - https://metallb.universe.tf/concepts/
+
+install_metallb: false

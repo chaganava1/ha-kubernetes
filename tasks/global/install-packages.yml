@@ -1,0 +1,45 @@
+---
+
+###
+# Install Docker, Kubernetes & Project Dependencies
+#
+
+- name: Add an apt signing key for Docker & K8s
+  apt_key:
+    url: "{{ item }}"
+    state: present
+  with_items:
+    - https://download.docker.com/linux/ubuntu/gpg
+    - https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    - https://baltocdn.com/helm/signing.asc
+  tags: k8s-packages
+
+- name: Add apt repository for Docker & K8s
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+    - deb https://apt.kubernetes.io/ kubernetes-xenial main
+    - deb https://baltocdn.com/helm/stable/debian/ all main
+  tags: k8s-packages
+
+- name: Install Docker, Kubernetes & Dependencies
+  apt: 
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - docker-ce
+    - kubelet
+    - kubeadm
+    - helm
+    - nfs-common
+    - keepalived
+    - haproxy
+    - python3-pip
+  tags: k8s-packages
+
+- name: Install python kubernetes package
+  pip:
+    name: kubernetes

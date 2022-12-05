@@ -1,0 +1,39 @@
+---
+
+###
+# Convienience 
+#
+
+- name: Add ansible user to docker group
+  user:
+    name: "{{ ansible_user }}"
+    group: docker
+
+###
+# Default docker containerd config needs removing before continuing
+# https://github.com/containerd/containerd/issues/4581
+#
+
+- name: Remove containerd config
+  file:
+    path: /etc/containerd/config.toml
+    state: absent
+
+- name: Restart containerd
+  service:
+    name: containerd
+    state: restarted
+
+###
+# Worker nodes don't need these so disabled by default, control nodes re-enable.
+#
+
+- name: Stop/Disable VRRP/HAProxy
+  become: true
+  service:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  with_items:
+    - haproxy
+    - keepalived

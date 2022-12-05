@@ -1,0 +1,39 @@
+! Configuration File for keepalived
+
+global_defs {
+   notification_email {
+     sysadmin@mydomain.com
+     support@mydomain.com
+   }
+   notification_email_from lb1@mydomain.com
+   smtp_server localhost
+   smtp_connect_timeout 30
+}
+
+# BEGIN VRRP_SCRIPT
+# END VRRP_SCRIPT
+
+vrrp_instance {{ ansible_host }} {
+    state MASTER
+    interface enp0s8
+    virtual_router_id 101
+    priority {{ vrrp_pri }}
+    advert_int 1
+    unicast_src_ip {{ ansible_host }}
+    unicast_peer {
+{% for host in groups['controllers'] %}
+{% if hostvars[host]['ansible_host'] !=  ansible_host  %}
+        {{ hostvars[host]['ansible_host'] }}
+{% endif %}
+{% endfor %}
+    }
+    authentication {
+        auth_type PASS
+        auth_pass k8s_$ooPaPAzz
+    }
+    virtual_ipaddress {
+        {{ api_endpoint }}
+    }
+# BEGIN TRACK_SCRIPT
+# END TRACK_SCRIPT
+}

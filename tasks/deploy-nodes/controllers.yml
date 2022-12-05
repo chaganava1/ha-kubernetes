@@ -1,0 +1,22 @@
+---
+
+###
+# Join the controllers to the cluster. 
+#
+
+- name: Check if controllers have already joined the cluster
+  stat:
+    path: "/etc/kubernetes/pki/apiserver.key"
+  register: joined
+  tags: join
+
+- name: Join the remaining controllers to the cluster
+  command: "{{ hostvars[vars['lead_controller']]['controller_join_command'].stdout_lines[0] }} --apiserver-advertise-address {{ ansible_host }} --apiserver-bind-port 6443"
+  when: not joined.stat.exists
+  tags: join
+
+###
+# Set kubeconfig
+#
+
+- include_tasks: set-kubeconfig.yml

@@ -1,0 +1,4 @@
+vrrp_script chk_haproxy {
+    script "pgrep haproxy"
+    interval 2
+}

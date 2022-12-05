@@ -1,0 +1,134 @@
+---
+
+  ###
+  # Install packages and add global config
+  #
+
+- name: Install packages
+  include_tasks: global/install-packages.yml
+  when:
+  - skip_packages_install == false
+
+- name: configure global settings
+  include_tasks: global/global-config.yml
+  when:
+  - skip_packages_install == false
+
+  ###
+  # End play if this is run by packer to build a vagrant box image
+  #
+
+- meta: end_play
+  when: build_base_image is true
+
+  ###
+  # Make sure kubelets are using the correct node IP address
+  # Needed when clustering on a system with multiple NICs
+  # https://github.com/kubernetes/kubeadm/issues/203
+  #
+
+- name: Explicitly define the kubelets node ip
+  become: true
+  lineinfile:
+    path: /etc/default/kubelet
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ ansible_host }}
+    create: true
+
+  ###
+  # Enable HA networking on controller nodes
+  #
+
+- name: Setup HA networking
+  include_tasks: ha/ha-api-network.yml
+  when: ansible_hostname in groups.controllers
+
+  ###
+  # Set a lead controller based on the alphanumerically lowest ansible_hostname if not already defined
+  # Best practice: define explicitly as a global var
+  #
+
+- name: Set lead controller if not already defined
+  set_fact:
+    lead_controller: "{{ groups.controllers | min }}"
+  run_once: true
+  when: lead_controller is not defined
+
+  ###
+  # Build Cluster
+  #
+
+- name: Deploy lead controller
+  include_tasks: deploy-nodes/lead-controller.yml
+  when: ansible_hostname == lead_controller
+
+- name: Deploy remaining controllers
+  include_tasks: deploy-nodes/controllers.yml
+  when:
+  - ansible_hostname in groups.controllers
+  - ansible_hostname != lead_controller
+
+- name: Deploy workers
+  include_tasks: deploy-nodes/workers.yml
+  when: 
+  - groups.workers is defined
+  - ansible_hostname in groups.workers
+  
+  ###
+  # Set hosts kubeconfig
+  #
+
+- name: Download kubeconfig to host
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ host_kubeconfig_dest }}"
+    flat: true
+  when: 
+  - ansible_hostname == lead_controller
+  - set_host_kubeconfig == true
+  tags: get-kubeconfig
+
+  ###
+  # Set VRRP to track HAProxy
+  #
+
+- name: Track HA Proxy
+  import_tasks: ha/track-haproxy.yml
+  when: ansible_hostname in groups.controllers
+
+  ###
+  # Remove taint from controllers
+  #
+
+- name: Remove NoSchedule Taint from controllers
+  become: false
+  kubernetes.core.k8s_taint:
+    state: absent
+    name: "{{ ansible_hostname }}"
+    taints:
+    - effect: NoSchedule
+      key: "node-role.kubernetes.io/control-plane"
+  when: 
+  - ansible_host in groups.controllers
+  - taint_controllers == false
+
+  ###
+  # Install optional extras
+  #
+
+- name: Install metrics server
+  include_tasks: optional-extras/metrics-server.yml
+  when: 
+  - ansible_hostname == lead_controller
+  - install_metrics_server == true
+
+- name: Install NFS Provisioner
+  include_tasks: optional-extras/nfs.yml
+  when: 
+  - ansible_hostname == lead_controller
+  - install_nfs_provisioner == true
+
+- name: Install Metallb
+  include_tasks: optional-extras/metallb.yml
+  when: 
+  - ansible_hostname == lead_controller
+  - install_metallb == true

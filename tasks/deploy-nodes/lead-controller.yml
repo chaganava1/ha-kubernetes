@@ -1,0 +1,66 @@
+---
+
+###
+# Initialise cluster
+#
+
+- name: Check if cluster is already initialized
+  stat:
+    path: "/etc/kubernetes/pki/apiserver.key"
+  register: initialized
+
+- name: Initialize the Kubernetes Cluster
+  command: 'kubeadm init --apiserver-advertise-address {{ ansible_host }} --apiserver-cert-extra-sans {{ api_endpoint }},{{ ansible_host }} --control-plane-endpoint {{ api_endpoint }}:{{ api_port }} --upload-certs --pod-network-cidr "192.168.0.0/16" -v=5'
+  when: not initialized.stat.exists
+  register: init_output
+
+###
+# Get token for controllers & workers to join cluster
+#
+
+- name: Get cluster control-plane certificate key
+  command: kubeadm init phase upload-certs --upload-certs
+  register: cert_key
+  tags: join
+
+- name: Generate controller join command
+  command: "kubeadm token create --print-join-command --certificate-key {{ cert_key.stdout_lines[-1] }}"
+  register: controller_join_command
+  tags: join
+
+- name: Generate worker join command
+  command: kubeadm token create --print-join-command
+  register: worker_join_command
+  tags: join
+
+###
+# Set kubeconfig
+#
+
+- include_tasks: set-kubeconfig.yml
+
+###
+# Set up Calico Networking
+#
+
+- name: Download Calico manifests
+  get_url:
+    url: "{{ item.url }}"
+    dest: "/tmp/{{ item.filename }}"
+    mode: "0664"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  with_items:
+    - url: https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/tigera-operator.yaml
+      filename: tigera-operator.yaml
+    - url: https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/custom-resources.yaml
+      filename: custom-resources.yaml
+
+- name: Install Calico networking
+  become: false
+  kubernetes.core.k8s:
+    state: present
+    src: "/tmp/{{ item }}"
+  with_items:
+    - tigera-operator.yaml
+    - custom-resources.yaml
