@@ -49,4 +49,4 @@
   lineinfile:
     path: /etc/fstab
     state: absent
-    regexp: 'swap'
+    regexp: "^%swap"
