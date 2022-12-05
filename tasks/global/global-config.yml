@@ -37,3 +37,16 @@
   with_items:
     - haproxy
     - keepalived
+
+###
+# Disable swap
+#
+
+- name: Disable swap
+  command: swapoff -a
+
+- name: Remove swap ftsab entires
+  lineinfile:
+    path: /etc/fstab
+    state: absent
+    regexp: 'swap'
