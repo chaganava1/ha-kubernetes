@@ -65,6 +65,16 @@
 # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic
 #
 
+- name: Set load peristence for br_netfilter and overlay modules
+  become: true
+  lineinfile:
+    path: /etc/modules-load.d/kubernetes.conf
+    line: "{{ item }}"
+    create: true
+  with_items:
+  - br_netfilter
+  - overlay
+
 - name: Ensure br_netfilter and overlay modules are loaded
   modprobe:
     name: "{{ item }}"
