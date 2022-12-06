@@ -4,11 +4,6 @@
 # Convienience 
 #
 
-- name: Add ansible user to docker group
-  user:
-    name: "{{ ansible_user }}"
-    group: docker
-
 ###
 # Enable CRI plugin and set cgroup driver to systemd as per:
 # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic

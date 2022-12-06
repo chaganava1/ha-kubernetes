@@ -33,7 +33,7 @@
     - apt-transport-https
     - ca-certificates
     - curl
-    - docker-ce
+    - containerd.io
     - kubelet
     - kubeadm
     - kubectl
