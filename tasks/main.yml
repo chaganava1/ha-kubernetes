@@ -6,13 +6,9 @@
 
 - name: Install packages
   include_tasks: global/install-packages.yml
-  when:
-  - skip_packages_install == false
 
 - name: configure global settings
   include_tasks: global/global-config.yml
-  when:
-  - skip_packages_install == false
 
   ###
   # End play if this is run by packer to build a vagrant box image

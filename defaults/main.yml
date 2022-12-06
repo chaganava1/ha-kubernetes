@@ -24,22 +24,6 @@ set_host_kubeconfig: false
 host_kubeconfig_dest: ~/.kube/config
 
 ###
-#   Vagrant streamlining:
-#
-#     Quicker, maybe out of date packages:
-#       - skip_install_packages: true 
-#       - Use VagrantBox: gadgieOps/focal-k8s
-#
-#     Slower, up to date packages:
-#       - skip_install_packages: false 
-#       - Use VagrantBox ubuntu/focal64
-#
-#    When not using vagrant, use skip_packages_install: false
-#
-
-skip_packages_install: false
-
-###
 # Exits role early, used when building the gadgieOps/focal-k8s vagrant box.
 #
 
