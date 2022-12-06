@@ -1,6 +1,17 @@
 ---
 
   ###
+  # Set a lead controller based on the alphanumerically lowest ansible_hostname if not already defined
+  # Best practice: define explicitly as a global var
+  #
+
+- name: Set lead controller if not already defined
+  set_fact:
+    lead_controller: "{{ groups.controllers | min }}"
+  run_once: true
+  when: lead_controller is not defined
+
+  ###
   # Install packages and add global config
   #
 
@@ -9,6 +20,12 @@
 
 - name: configure global settings
   include_tasks: global/global-config.yml
+
+- name: Generate release notes
+  include_tasks: global/generate_release_notes.yml
+  when: 
+  - generate_release_notes is true
+  - ansible_hostname == lead_controller
 
   ###
   # End play if this is run by packer to build a vagrant box image
@@ -24,17 +41,6 @@
 - name: Setup HA networking
   include_tasks: ha/ha-api-network.yml
   when: ansible_hostname in groups.controllers
-
-  ###
-  # Set a lead controller based on the alphanumerically lowest ansible_hostname if not already defined
-  # Best practice: define explicitly as a global var
-  #
-
-- name: Set lead controller if not already defined
-  set_fact:
-    lead_controller: "{{ groups.controllers | min }}"
-  run_once: true
-  when: lead_controller is not defined
 
   ###
   # Build Cluster

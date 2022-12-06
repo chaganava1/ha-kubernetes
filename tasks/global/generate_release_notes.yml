@@ -1,0 +1,31 @@
+---
+- name: Remove release file if it exists
+  become: false
+  file:
+    path: "{{ release_note_file }}"
+    state: absent
+  delegate_to: localhost
+
+- name: Add OS Version to release-notes
+  become: false
+  lineinfile:
+    line: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}\n"
+    path: "{{ release_note_file }}"
+    create: true
+  delegate_to: localhost
+
+- name: Get package version
+  command: "apt show {{ item }}"
+  register: "outputs"
+  with_items:
+  - "{{ packages }}"
+
+- name: Log kubectl version
+  become: false
+  lineinfile:
+    line: "{{ item.stdout_lines[0] }}, {{ item.stdout_lines[1] }}"
+    path: "{{ release_note_file }}"
+    create: true
+  delegate_to: localhost
+  with_items:
+  - "{{ outputs.results }}"

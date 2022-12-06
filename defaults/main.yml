@@ -51,3 +51,11 @@ nfs_subnet: "192.168.60.0/24"
 # - https://metallb.universe.tf/concepts/
 
 install_metallb: false
+
+
+###
+# Creates a log of installed packages in the playbook dir
+# 
+
+genereate_release_notes: false
+release_note_file: release-notes
