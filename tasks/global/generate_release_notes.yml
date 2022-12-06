@@ -9,21 +9,49 @@
 - name: Add OS Version to release-notes
   become: false
   lineinfile:
-    line: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}\n"
+    line: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}\n\nSystem Packages:"
     path: "{{ release_note_file }}"
     create: true
   delegate_to: localhost
+  run_once: true
 
-- name: Get package version
+- name: Get package versions
   command: "apt show {{ item }}"
   register: "outputs"
   with_items:
   - "{{ packages }}"
+  run_once: true
 
-- name: Log kubectl version
+- name: Log package versions
   become: false
   lineinfile:
-    line: "{{ item.stdout_lines[0] }}, {{ item.stdout_lines[1] }}"
+    line: "- {{ item.stdout_lines[0] }}, {{ item.stdout_lines[1] }}"
+    path: "{{ release_note_file }}"
+    create: true
+  delegate_to: localhost
+  with_items:
+  - "{{ outputs.results }}"
+
+- name: Log python package header
+  become: false
+  lineinfile:
+    line: "\nPython Packages:"
+    path: "{{ release_note_file }}"
+    create: true
+  delegate_to: localhost
+  run_once: true
+
+- name: Get python package version
+  command: "pip show {{ item }}"
+  register: "outputs"
+  with_items:
+  - "{{ python_packages }}"
+  run_once: true
+
+- name: Log python package versions
+  become: false
+  lineinfile:
+    line: "- {{ item.stdout_lines[0] }}, {{ item.stdout_lines[1] }}"
     path: "{{ release_note_file }}"
     create: true
   delegate_to: localhost
