@@ -124,3 +124,9 @@
   when: 
   - ansible_hostname == lead_controller
   - install_metallb == true
+
+- name: Install Kubernetes Dashboard
+  include_tasks: optional-extras/kubernetes-dashboard.yml
+  when: 
+  - ansible_hostname == lead_controller
+  - install_kubernetes_dashboard == true

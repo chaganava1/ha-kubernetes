@@ -52,6 +52,11 @@ nfs_subnet: "192.168.60.0/24"
 
 install_metallb: false
 
+# Kubernetes dashboard
+# https://github.com/kubernetes/dashboard
+
+install_kubernetes_dashboard: false
+kubernetes_dashboard_port: 30080
 
 ###
 # Creates a log of installed packages in the playbook dir
