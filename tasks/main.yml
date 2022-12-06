@@ -96,7 +96,7 @@
     - effect: NoSchedule
       key: "node-role.kubernetes.io/control-plane"
   when: 
-  - ansible_host in groups.controllers
+  - ansible_hostname in groups.controllers
   - taint_controllers == false
 
   ###
