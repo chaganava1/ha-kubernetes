@@ -2,7 +2,7 @@
 # Networking Options
 # 
 # - All nodes must be on the same subnet. 
-# - api_endpoint is used by VRRP as a virtual IP for the API Server
+# - api_endpoint is used by VRRP as a stable virtual IP for the k8s API Server
 # - api_port is the port exposed by HAProxy
 #
 
