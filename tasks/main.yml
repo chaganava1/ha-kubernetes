@@ -121,8 +121,12 @@
   - ansible_hostname == lead_controller
   - install_metrics_server == true
 
-- name: Install NFS Provisioner
-  include_tasks: optional-extras/nfs.yml
+- name: Install NFS Provisioner - Client packages
+  include_tasks: optional-extras/nfs-common.yml
+  when: install_nfs_provisioner == true
+
+- name: Install NFS Provisioner - Server Side
+  include_tasks: optional-extras/nfs-provisioner.yml
   when: 
   - ansible_hostname == lead_controller
   - install_nfs_provisioner == true

@@ -39,7 +39,6 @@
     - kubectl
     - kubernetes-cni
     - helm
-    - nfs-common
     - keepalived
     - haproxy
     - python3-pip
