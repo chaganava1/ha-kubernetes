@@ -7,13 +7,13 @@
 - name: Install packages
   include_tasks: global/install-packages.yml
 
-- name: configure global settings
-  include_tasks: global/global-config.yml
-
 - name: Generate release notes
   include_tasks: global/generate_release_notes.yml
   when: 
   - generate_release_notes is true
+
+- name: configure global settings
+  include_tasks: global/global-config.yml
 
   ###
   # End play if this is run by packer to build a vagrant box image
