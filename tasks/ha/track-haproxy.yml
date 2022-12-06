@@ -13,9 +13,4 @@
     block: "{{ lookup('template', 'vrrp_script.j2') }}"
   - marker: "# {mark} TRACK_SCRIPT"
     block: "{{ lookup('template', 'track_script.j2') }}"
-
-- name: Restart VRRP
-  become: true
-  service:
-    name: keepalived
-    state: restarted
+  notify: Restart VRRP

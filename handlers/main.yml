@@ -1,0 +1,7 @@
+---
+- name: Restart VRRP
+  become: true
+  service:
+    name: keepalived
+    state: restarted
+
