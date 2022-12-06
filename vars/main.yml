@@ -1,0 +1,13 @@
+  packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - containerd.io
+    - kubelet
+    - kubeadm
+    - kubectl
+    - kubernetes-cni
+    - helm
+    - keepalived
+    - haproxy
+    - python3-pip

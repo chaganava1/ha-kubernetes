@@ -30,18 +30,7 @@
     state: present
     update_cache: yes
   with_items:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - containerd.io
-    - kubelet
-    - kubeadm
-    - kubectl
-    - kubernetes-cni
-    - helm
-    - keepalived
-    - haproxy
-    - python3-pip
+    - "{{ packages }}"
   tags: k8s-packages
 
 - name: Install python kubernetes package
