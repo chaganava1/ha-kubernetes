@@ -35,4 +35,6 @@
 
 - name: Install python kubernetes package
   pip:
-    name: kubernetes
+    name: "{{ item }}"
+  with_items:
+  - "{{ python_packages }}"
