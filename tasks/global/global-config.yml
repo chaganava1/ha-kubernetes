@@ -10,14 +10,23 @@
     group: docker
 
 ###
-# Default docker containerd config needs removing before continuing
-# https://github.com/containerd/containerd/issues/4581
+# Enable CRI plugin and set cgroup driver to systemd as per:
+# https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic
 #
 
-- name: Remove containerd config
-  file:
+- name: Remove cri from disabled plugins list
+  lineinfile:
     path: /etc/containerd/config.toml
     state: absent
+    line: disabled_plugins = ["cri"]
+
+- name: Set cgroup driver to systemd
+  blockinfile:
+    path: /etc/containerd/config.toml
+    block: |
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+          SystemdCgroup = true
 
 - name: Restart containerd
   service:
@@ -50,3 +59,26 @@
     path: /etc/fstab
     state: absent
     regexp: "^%swap"
+
+###
+# Setup IP Tables as per:
+# https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic
+#
+
+- name: Ensure br_netfilter and overlay modules are loaded
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - br_netfilter
+  - overlay
+
+- name: Configure IP Tables
+  sysctl:
+    name: "{{ item }}"
+    value: '1'
+    state: present
+  with_items:
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-ip6tables
+    - net.ipv4.ip_forward
