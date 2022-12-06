@@ -24,7 +24,7 @@
     - deb https://baltocdn.com/helm/stable/debian/ all main
   tags: k8s-packages
 
-- name: Install Docker, Kubernetes & Dependencies
+- name: Install Containerd, Kubernetes & Dependencies
   apt: 
     name: "{{ item }}"
     state: present
