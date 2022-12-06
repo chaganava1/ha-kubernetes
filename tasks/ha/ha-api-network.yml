@@ -2,7 +2,9 @@
 - name: Get cluster interface
   set_fact:
     cluster_interface: "{{ item }}"
-  when: hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] == ansible_host
+  when: 
+  - hostvars[inventory_hostname]['ansible_' + item]['ipv4'] is defined
+  - hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] == ansible_host
   with_items:
     - "{{ ansible_interfaces }}"
 
