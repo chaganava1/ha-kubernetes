@@ -1,0 +1,22 @@
+---
+- name: Remove NoSchedule Taint from controllers
+  become: false
+  kubernetes.core.k8s_taint:
+    state: absent
+    name: "{{ ansible_hostname }}"
+    taints:
+    - effect: NoSchedule
+      key: "node-role.kubernetes.io/control-plane"
+  when: 
+  - taint_controllers == false
+
+- name: Add NoSchedule Taint to controllers
+  become: false
+  kubernetes.core.k8s_taint:
+    state: present
+    name: "{{ ansible_hostname }}"
+    taints:
+    - effect: NoSchedule
+      key: "node-role.kubernetes.io/control-plane"
+  when: 
+  - taint_controllers == true
