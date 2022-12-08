@@ -36,35 +36,6 @@ host_kubeconfig_dest: ~/.kube/config
 build_base_image: false
 
 ###
-# Optional Extras
-#
-
-# Metrics Server
-# Gathering if metics for nodes and pods etc
-# - https://github.com/kubernetes-sigs/metrics-server
-
-install_metrics_server: false
-
-# NFS Provisioner
-# Installs NFS Subdir External Provisioner for dynamic provisioning of NFS storage
-# - https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
-
-install_nfs_provisioner: false
-nfs_subnet: "192.168.60.0/24"
-
-# Metallb
-# Allows us to ex###pose a virtual IP to the host network in the same way as we would on a CSP
-# - https://metallb.universe.tf/concepts/
-
-install_metallb: false
-
-# Kubernetes dashboard
-# https://github.com/kubernetes/dashboard
-
-install_kubernetes_dashboard: false
-kubernetes_dashboard_port: 30080
-
-###
 # Creates a log of installed packages in the playbook dir
 # 
 

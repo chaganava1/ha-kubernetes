@@ -10,7 +10,7 @@
 - name: Generate release notes
   include_tasks: global/generate_release_notes.yml
   when: 
-  - generate_release_notes is true
+  - generate_release_notes | bool
 
 - name: configure global settings
   include_tasks: global/global-config.yml
@@ -20,8 +20,7 @@
   #
 
 - meta: end_play
-  when: build_base_image is true
-
+  when: build_base_image | bool
   ###
   # Enable HA networking on controller nodes
   #
@@ -90,35 +89,3 @@
 - name: Set taint status on controllers
   import_tasks: taints.yml
   when: inventory_hostname in groups.controllers
-
-  ###
-  # Install optional extras
-  #
-
-- name: Install metrics server
-  include_tasks: optional-extras/metrics-server.yml
-  when: 
-  - inventory_hostname == lead_controller
-  - install_metrics_server | bool
-
-- name: Install NFS Provisioner - Client packages
-  include_tasks: optional-extras/nfs-common.yml
-  when: install_nfs_provisioner | bool
-
-- name: Install NFS Provisioner - Server Side
-  include_tasks: optional-extras/nfs-provisioner.yml
-  when: 
-  - inventory_hostname == lead_controller
-  - install_nfs_provisioner | bool
-
-- name: Install Metallb
-  include_tasks: optional-extras/metallb.yml
-  when: 
-  - inventory_hostname == lead_controller
-  - install_metallb | bool
-
-- name: Install Kubernetes Dashboard
-  include_tasks: optional-extras/kubernetes-dashboard.yml
-  when: 
-  - inventory_hostname == lead_controller
-  - install_kubernetes_dashboard | bool

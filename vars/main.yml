@@ -7,7 +7,6 @@ packages:
 - kubeadm
 - kubectl
 - kubernetes-cni
-- helm
 - keepalived
 - haproxy
 - python3-pip
