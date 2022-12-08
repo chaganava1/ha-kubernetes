@@ -1,0 +1,3 @@
+---
+- name: Pull kubernetes images
+  command: kubeadm config images pull --v=5
