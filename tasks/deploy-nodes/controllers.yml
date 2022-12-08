@@ -11,7 +11,7 @@
   tags: join
 
 - name: Join the remaining controllers to the cluster
-  command: "{{ hostvars[vars['lead_controller']]['controller_join_command'].stdout_lines[0] }} --apiserver-advertise-address {{ ansible_host }} --apiserver-bind-port 6443"
+  command: "{{ hostvars[vars['lead_controller']]['controller_join_command'].stdout_lines[0] }} --apiserver-advertise-address {{ ansible_host }} --node-name {{ node_name }}"
   when: not joined.stat.exists
   tags: join
 

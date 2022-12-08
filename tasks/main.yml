@@ -28,7 +28,7 @@
 
 - name: Setup HA networking
   include_tasks: ha/ha-api-network.yml
-  when: ansible_hostname in groups.controllers
+  when: inventory_hostname in groups.controllers
 
   ###
   # Set a lead controller based on the alphanumerically lowest ansible_hostname if not already defined
@@ -47,19 +47,19 @@
 
 - name: Deploy lead controller
   include_tasks: deploy-nodes/lead-controller.yml
-  when: ansible_hostname == lead_controller
+  when: inventory_hostname == lead_controller
 
 - name: Deploy remaining controllers
   include_tasks: deploy-nodes/controllers.yml
   when:
-  - ansible_hostname in groups.controllers
-  - ansible_hostname != lead_controller
+  - inventory_hostname in groups.controllers
+  - inventory_hostname != lead_controller
 
 - name: Deploy workers
   include_tasks: deploy-nodes/workers.yml
   when: 
   - groups.workers is defined
-  - ansible_hostname in groups.workers
+  - inventory_hostname in groups.workers
   
   ###
   # Set hosts kubeconfig
@@ -71,7 +71,7 @@
     dest: "{{ host_kubeconfig_dest }}"
     flat: true
   when: 
-  - ansible_hostname == lead_controller
+  - inventory_hostname == lead_controller
   - set_host_kubeconfig | bool
   tags: get-kubeconfig
 
@@ -81,7 +81,7 @@
 
 - name: Track HA Proxy
   import_tasks: ha/track-haproxy.yml
-  when: ansible_hostname in groups.controllers
+  when: inventory_hostname in groups.controllers
 
   ###
   # Remove taint from controllers
@@ -89,7 +89,7 @@
 
 - name: Set taint status on controllers
   import_tasks: taints.yml
-  when: ansible_hostname in groups.controllers
+  when: inventory_hostname in groups.controllers
 
   ###
   # Install optional extras
@@ -98,7 +98,7 @@
 - name: Install metrics server
   include_tasks: optional-extras/metrics-server.yml
   when: 
-  - ansible_hostname == lead_controller
+  - inventory_hostname == lead_controller
   - install_metrics_server | bool
 
 - name: Install NFS Provisioner - Client packages
@@ -108,17 +108,17 @@
 - name: Install NFS Provisioner - Server Side
   include_tasks: optional-extras/nfs-provisioner.yml
   when: 
-  - ansible_hostname == lead_controller
+  - inventory_hostname == lead_controller
   - install_nfs_provisioner | bool
 
 - name: Install Metallb
   include_tasks: optional-extras/metallb.yml
   when: 
-  - ansible_hostname == lead_controller
+  - inventory_hostname == lead_controller
   - install_metallb | bool
 
 - name: Install Kubernetes Dashboard
   include_tasks: optional-extras/kubernetes-dashboard.yml
   when: 
-  - ansible_hostname == lead_controller
+  - inventory_hostname == lead_controller
   - install_kubernetes_dashboard | bool

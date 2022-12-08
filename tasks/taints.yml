@@ -3,7 +3,7 @@
   become: false
   kubernetes.core.k8s_taint:
     state: absent
-    name: "{{ ansible_hostname }}"
+    name: "{{ node_name }}"
     taints:
     - effect: NoSchedule
       key: "node-role.kubernetes.io/control-plane"
@@ -14,7 +14,7 @@
   become: false
   kubernetes.core.k8s_taint:
     state: present
-    name: "{{ ansible_hostname }}"
+    name: "{{ node_name }}"
     taints:
     - effect: NoSchedule
       key: "node-role.kubernetes.io/control-plane"

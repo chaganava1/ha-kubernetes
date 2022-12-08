@@ -1,4 +1,10 @@
 ###
+# Node Name
+#
+
+node_name: "{{ ansible_hostname }}"
+
+###
 # Networking Options
 # 
 # - All nodes must be on the same subnet. 
