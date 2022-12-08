@@ -3,7 +3,11 @@ Ansible Role: ha-kubernetes
 
 WORK IN PROGRESS
 
-Ansible role that configures a kubernetes cluster with high availability options using keepalived and HAProxy
+Ansible role that configures a kubernetes cluster with high availability options using keepalived and HAProxy.
+
+
+<img src="images/ha-diagram.png" alt="ha-diagram" width="600"/>
+
 
 Dependencies
 ------------
@@ -20,7 +24,10 @@ ansible-galaxy install -r requirements.yml
 Inventory configuration
 -----------------------
 
-This role requires that control plane nodes are a part of the "controller" group and worker nodes are a part of the "worker" group. One control plane node should be elected as a leader, this node will initialise the cluster that all other nodes will join. This should be set using the "lead_controller: {{ inventory_name }}" variable. The following example inventory file shows the node named "barry" has the lead controller.
+This role requires that control plane nodes are a part of the "controllers" group and worker nodes are a part of the "workers" group.  
+
+
+One control plane node is elected as leader, this node will initialise the cluster and all other nodes will join. This should be set using the "lead_controller: {{ inventory_name }}" global variable. The following example inventory file shows the node named "barry" has the lead controller.
 
 ~~~
 all:
@@ -52,7 +59,7 @@ all:
           ansible_ssh_private_key_file: .vagrant/machines/worker-3/virtualbox/private_key
 ~~~
 
-If no lead controller is set, the alpha-numerically lowest controller will be dynamically set as the lead controller. The lead controller has no operational significance to the cluster, it is simply the node one which the cluster is intialized.
+If no lead controller is set, the alpha-numerically lowest controller will be dynamically set as the lead controller. The lead controller has no operational significance to the cluster, it is simply the node on which the cluster is intialized.
 
 Role Variables
 --------------
