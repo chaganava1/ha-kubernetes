@@ -1,4 +1,9 @@
 ###
+# Container runtime interface
+#
+cri: containerd
+
+###
 # Node Name
 #
 

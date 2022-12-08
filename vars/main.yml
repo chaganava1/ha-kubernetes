@@ -1,8 +1,4 @@
 packages:
-- apt-transport-https
-- ca-certificates
-- curl
-- containerd.io
 - kubelet
 - kubeadm
 - kubectl

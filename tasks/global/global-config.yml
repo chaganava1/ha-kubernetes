@@ -11,14 +11,6 @@
     state: absent
     line: disabled_plugins = ["cri"]
 
-- name: Set cgroup driver to systemd
-  blockinfile:
-    path: /etc/containerd/config.toml
-    block: |
-      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
-          SystemdCgroup = true
-
 - name: Restart containerd
   service:
     name: containerd
