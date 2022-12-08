@@ -1,0 +1,14 @@
+---
+
+  ###
+  # Make sure kubelets are using the correct node IP address
+  # Needed when clustering on a system with multiple NICs
+  # https://github.com/kubernetes/kubeadm/issues/203
+  #
+
+- name: Explicitly define the kubelets node ip
+  become: true
+  lineinfile:
+    path: /etc/default/kubelet
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ ansible_host }}
+    create: true

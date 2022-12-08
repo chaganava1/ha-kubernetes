@@ -48,6 +48,9 @@
   # Build Cluster
   #
 
+- name: Set kubelet node IP
+  include_tasks: deploy-nodes/set-kubelet-node-ip.yml
+
 - name: Deploy lead controller
   include_tasks: deploy-nodes/lead-controller.yml
   when: inventory_hostname == lead_controller
