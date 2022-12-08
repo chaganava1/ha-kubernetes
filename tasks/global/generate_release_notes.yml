@@ -9,17 +9,50 @@
 - name: Add OS Version to release-notes
   become: false
   lineinfile:
-    line: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}\n\nSystem Packages:"
+    line: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}\n"
     path: "{{ release_note_file }}"
     create: true
   delegate_to: localhost
   run_once: true
+
+- name: Get kubernetes images
+  command: kubeadm config images list
+  register: image_list
+
+- name: Log kubernetes image versions
+  become: false
+  lineinfile:
+    line: "Kubernetes images:"
+    path: "{{ release_note_file }}"
+    create: true
+  delegate_to: localhost
+  run_once: true
+
+- name: Log kubernetes image versions
+  become: false
+  lineinfile:
+    line: "- {{ item }}"
+    path: "{{ release_note_file }}"
+    create: true
+  delegate_to: localhost
+  run_once: true
+  with_items:
+  - "{{ image_list.stdout_lines }}"
 
 - name: Get package versions
   command: "apt show {{ item }}"
   register: "outputs"
   with_items:
   - "{{ packages }}"
+  run_once: true
+
+- name: Log package versions
+  become: false
+  lineinfile:
+    line: "  \nSystem Packages:"
+    path: "{{ release_note_file }}"
+    create: true
+  delegate_to: localhost
   run_once: true
 
 - name: Log package versions

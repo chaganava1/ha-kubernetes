@@ -38,3 +38,6 @@
     name: "{{ item }}"
   with_items:
   - "{{ python_packages }}"
+
+- name: Pull kubernetes images
+  command: kubeadm config images pull
