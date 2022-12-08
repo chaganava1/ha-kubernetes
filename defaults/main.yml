@@ -30,7 +30,7 @@ set_host_kubeconfig: false
 host_kubeconfig_dest: ~/.kube/config
 
 ###
-# Exits role early, used when building the gadgieOps/focal-k8s vagrant box.
+# Exits role early, used when building a base image.
 #
 
 build_base_image: false
@@ -40,4 +40,4 @@ build_base_image: false
 # 
 
 genereate_release_notes: false
-release_note_file: release-notes
+release_note_file: "{{ playbook_dir }}/release-notes"
