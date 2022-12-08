@@ -24,6 +24,7 @@
 
 - meta: end_play
   when: build_base_image | bool
+  
   ###
   # Enable HA networking on controller nodes
   #

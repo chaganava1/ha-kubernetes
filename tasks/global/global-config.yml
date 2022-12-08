@@ -1,10 +1,6 @@
 ---
 
 ###
-# Convienience 
-#
-
-###
 # Enable CRI plugin and set cgroup driver to systemd as per:
 # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic
 #
