@@ -4,25 +4,23 @@
 # Install Docker, Kubernetes & Project Dependencies
 #
 
-- name: Add an apt signing key for Docker & K8s
+- name: Add an apt signing key for Kubernetes
   apt_key:
     url: "{{ item }}"
     state: present
   with_items:
-    - https://download.docker.com/linux/ubuntu/gpg
     - https://packages.cloud.google.com/apt/doc/apt-key.gpg
   tags: k8s-packages
 
-- name: Add apt repository for Docker & K8s
+- name: Add apt repository for Kubernetes
   apt_repository:
     repo: "{{ item }}"
     state: present
   with_items:
-    - deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
     - deb https://apt.kubernetes.io/ kubernetes-xenial main
   tags: k8s-packages
 
-- name: Install Containerd, Kubernetes & Dependencies
+- name: Install Kubernetes, Keepalived, HAProxy & Dependencies
   apt: 
     name: "{{ item }}"
     state: present

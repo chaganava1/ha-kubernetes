@@ -1,0 +1,5 @@
+---
+dependencies:
+  - role: robertdebock.update_package_cache
+  - role: geerlingguy.containerd
+    when: cri == containerd
