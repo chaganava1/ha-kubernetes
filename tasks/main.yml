@@ -72,7 +72,7 @@
     flat: true
   when: 
   - ansible_hostname == lead_controller
-  - set_host_kubeconfig == true
+  - set_host_kubeconfig | bool
   tags: get-kubeconfig
 
   ###
@@ -99,26 +99,26 @@
   include_tasks: optional-extras/metrics-server.yml
   when: 
   - ansible_hostname == lead_controller
-  - install_metrics_server == true
+  - install_metrics_server | bool
 
 - name: Install NFS Provisioner - Client packages
   include_tasks: optional-extras/nfs-common.yml
-  when: install_nfs_provisioner == true
+  when: install_nfs_provisioner | bool
 
 - name: Install NFS Provisioner - Server Side
   include_tasks: optional-extras/nfs-provisioner.yml
   when: 
   - ansible_hostname == lead_controller
-  - install_nfs_provisioner == true
+  - install_nfs_provisioner | bool
 
 - name: Install Metallb
   include_tasks: optional-extras/metallb.yml
   when: 
   - ansible_hostname == lead_controller
-  - install_metallb == true
+  - install_metallb | bool
 
 - name: Install Kubernetes Dashboard
   include_tasks: optional-extras/kubernetes-dashboard.yml
   when: 
   - ansible_hostname == lead_controller
-  - install_kubernetes_dashboard == true
+  - install_kubernetes_dashboard | bool
