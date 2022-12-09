@@ -28,9 +28,3 @@
   with_items:
     - "{{ packages }}"
   tags: k8s-packages
-
-- name: Install python kubernetes package
-  pip:
-    name: "{{ item }}"
-  with_items:
-  - "{{ python_packages }}"

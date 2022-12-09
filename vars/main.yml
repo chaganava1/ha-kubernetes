@@ -5,7 +5,3 @@ packages:
 - kubernetes-cni
 - keepalived
 - haproxy
-- python3-pip
-  
-python_packages:
-- kubernetes

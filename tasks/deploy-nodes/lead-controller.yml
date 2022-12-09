@@ -43,24 +43,7 @@
 # Set up Calico Networking
 #
 
-- name: Download Calico manifests
-  get_url:
-    url: "{{ item.url }}"
-    dest: "/tmp/{{ item.filename }}"
-    mode: "0664"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-  with_items:
-    - url: https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/tigera-operator.yaml
-      filename: tigera-operator.yaml
-    - url: https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/custom-resources.yaml
-      filename: custom-resources.yaml
-
-- name: Install Calico networking
+- name: Install Calico manifests
   become: false
-  kubernetes.core.k8s:
-    state: present
-    src: "/tmp/{{ item }}"
-  with_items:
-    - tigera-operator.yaml
-    - custom-resources.yaml
+  command: "kubectl apply -f https://projectcalico.docs.tigera.io/manifests/calico.yaml"
+  register: calico
