@@ -1,7 +1,6 @@
 ---
-
 ###
-# Install Docker, Kubernetes & Project Dependencies
+# Install Kubernetes & Project Dependencies
 #
 
 - name: Add an apt signing key for Kubernetes
@@ -10,7 +9,6 @@
     state: present
   with_items:
     - https://packages.cloud.google.com/apt/doc/apt-key.gpg
-  tags: k8s-packages
 
 - name: Add apt repository for Kubernetes
   apt_repository:
@@ -18,13 +16,3 @@
     state: present
   with_items:
     - deb https://apt.kubernetes.io/ kubernetes-xenial main
-  tags: k8s-packages
-
-- name: Install Kubernetes, Keepalived, HAProxy & Dependencies
-  apt: 
-    name: "{{ item }}"
-    state: present
-    update_cache: yes
-  with_items:
-    - "{{ packages }}"
-  tags: k8s-packages

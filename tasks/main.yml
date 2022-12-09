@@ -4,14 +4,26 @@
   # Install packages and add global config
   #
 
-- name: Install packages
-  include_tasks: global/install-packages.yml
+- name: Prep Debian
+  include_tasks: global/prep-debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Prep RedHat
+  include_tasks: global/prep-redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Install Kubernetes, Keepalived, HAProxy
+  package: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ packages }}"
 
 - name: configure global settings
   include_tasks: global/global-config.yml
 
 - name: Pull kubernetes images
-  include_tasks: global/pull-kubernetes-images.yml
+  command: kubeadm config images pull --v=5
 
 - name: Generate release notes
   include_tasks: global/generate_release_notes.yml
@@ -19,11 +31,11 @@
   - generate_release_notes | bool
 
   ###
-  # End play if this is run by packer to build a vagrant box image
+  # End play if set to only install and not configure
   #
 
 - meta: end_play
-  when: build_base_image | bool
+  when: install_only | bool
   
   ###
   # Enable HA networking on controller nodes

@@ -35,10 +35,10 @@ set_host_kubeconfig: false
 host_kubeconfig_dest: ~/.kube/config
 
 ###
-# Exits role early, used when building a base image.
+# Installs packages and exits role early
 #
 
-build_base_image: false
+install_only: false
 
 ###
 # Creates a log of installed packages in the playbook dir

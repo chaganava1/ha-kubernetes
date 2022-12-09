@@ -112,6 +112,12 @@ Collaboration
 -------------
 Please feel free to raise issues and submit pull requests. I have been using this role along side Vagrant to spin up dev and test environments that are in line with my production environment. I am working on making this role more generic and accessible for other usecases.
 
+Notes
+-----
+Tested using:
+- Ubuntu 20.04
+- CentOS 7.9
+
 License
 -------
 
