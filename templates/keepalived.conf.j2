@@ -1,17 +1,15 @@
 ! Configuration File for keepalived
 
 global_defs {
-   notification_email {
-     sysadmin@mydomain.com
-     support@mydomain.com
-   }
-   notification_email_from lb1@mydomain.com
-   smtp_server localhost
-   smtp_connect_timeout 30
+    enable_script_security
+    script_user "{{ ansible_user }}"
 }
 
-# BEGIN VRRP_SCRIPT
-# END VRRP_SCRIPT
+vrrp_script chk_haproxy {
+    script "pgrep haproxy"
+    interval 2
+    init_fail
+}
 
 vrrp_instance {{ ansible_host }} {
     state MASTER
@@ -34,6 +32,7 @@ vrrp_instance {{ ansible_host }} {
     virtual_ipaddress {
         {{ api_endpoint }}
     }
-# BEGIN TRACK_SCRIPT
-# END TRACK_SCRIPT
+    track_script {
+      chk_haproxy
+    }
 }

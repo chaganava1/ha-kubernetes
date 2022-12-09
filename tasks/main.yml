@@ -80,15 +80,7 @@
   - inventory_hostname == lead_controller
   - set_host_kubeconfig | bool
   tags: get-kubeconfig
-
-  ###
-  # Set VRRP to track HAProxy
-  #
-
-- name: Track HA Proxy
-  import_tasks: ha/track-haproxy.yml
-  when: inventory_hostname in groups.controllers
-
+  
   ###
   # Remove taint from controllers
   #
