@@ -1,4 +1,3 @@
 ---
-- src: robertdebock.update_package_cache
 - src: geerlingguy.containerd
 - src: geerlingguy.kubernetes

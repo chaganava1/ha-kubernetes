@@ -16,8 +16,17 @@
   package: 
     name: "{{ item }}"
     state: present
+    update_cache: true
   with_items:
     - "{{ packages }}"
+
+  ###
+  # Install CRI
+  #
+
+- name: Install containerd
+  include_role: 
+    name: geerlingguy.containerd
 
   ###
   # Enable HA networking on controller nodes
