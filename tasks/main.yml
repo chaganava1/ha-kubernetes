@@ -1,7 +1,7 @@
 ---
 
   ###
-  # Install packages and add global config
+  # Install HA components
   #
 
 - name: Prep Debian
@@ -12,7 +12,7 @@
   include_tasks: global/prep-redhat.yml
   when: ansible_os_family == 'RedHat'
 
-- name: Install Kubernetes, Keepalived, HAProxy
+- name: Keepalived, HAProxy
   package: 
     name: "{{ item }}"
     state: present
@@ -57,27 +57,11 @@
   when: lead_controller is not defined
 
   ###
-  # Build Cluster
+  # Install kubernetes and deploy the cluster
   #
 
-- name: Set kubelet node IP
-  include_tasks: deploy-nodes/set-kubelet-node-ip.yml
-
-- name: Deploy lead controller
-  include_tasks: deploy-nodes/lead-controller.yml
-  when: inventory_hostname == lead_controller
-
-- name: Deploy remaining controllers
-  include_tasks: deploy-nodes/controllers.yml
-  when:
-  - inventory_hostname in groups.controllers
-  - inventory_hostname != lead_controller
-
-- name: Deploy workers
-  include_tasks: deploy-nodes/workers.yml
-  when: 
-  - groups.workers is defined
-  - inventory_hostname in groups.workers
+- name: Deploy cluster
+  include_tasks: deploy-nodes/deploy-cluster.yml
   
   ###
   # Set hosts kubeconfig

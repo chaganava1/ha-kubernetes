@@ -15,6 +15,7 @@ Dependencies
 Required roles:
 - robertdebock.update_package_cache
 - geerlingguy.containerd
+- geerlingguy.kubernetes
 
 Can be installed using:
 ~~~

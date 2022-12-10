@@ -1,7 +1,3 @@
 packages:
-- kubelet
-- kubeadm
-- kubectl
-- kubernetes-cni
 - keepalived
 - haproxy

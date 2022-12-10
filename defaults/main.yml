@@ -21,6 +21,9 @@ api_endpoint: "192.168.60.100"
 api_port: 8443
 vrrp_pri: 100
 
+pod_subnet: 10.252.0.0/16
+cni: calico
+
 ###
 # Allow pods to run on the controller nodes by setting to false
 #

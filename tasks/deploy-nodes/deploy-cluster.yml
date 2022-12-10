@@ -1,0 +1,55 @@
+---
+
+  ###
+  # Set kubernetes_role vars for geerlingguy.kubernetes
+  #
+
+- name: Set lead controller to 'control_plane' for geerlingguy.kubernetes
+  set_fact:
+    kubernetes_role: "control_plane"
+  when: inventory_hostname == lead_controller
+
+- name: Set non lead controllers to "controller" to skip initialization in geerlingguy.kubernetes
+  set_fact:
+    kubernetes_role: "null"
+  when: inventory_hostname != lead_controller
+
+  ###
+  # Install Kubernetes and Deploy Cluster
+  #
+
+- name: Install Kubernetes and start cluster
+  include_role:
+    name: geerlingguy.kubernetes
+  vars:
+    kubernetes_config_init_configuration:
+      localAPIEndpoint:
+        advertiseAddress: "{{ ansible_host }}"
+      nodeRegistration:
+        name: "{{ node_name }}"
+        kubeletExtraArgs:
+          address: "{{ ansible_host }}"
+    kubernetes_kubeadm_init_extra_opts: "--upload-certs"
+    kubernetes_config_cluster_configuration:
+      networking:
+        podSubnet: "{{ pod_subnet }}"
+      controlPlaneEndpoint: "{{ api_endpoint }}:{{ api_port }}"
+      apiServer:
+        certSans:
+        - "{{ api_endpoint }}"
+        - "{{ ansible_host }}"
+    kubernetes_config_kubelet_configuration:
+      cgroupDriver: "systemd"
+      address: "{{ ansible_host }}"
+      serializeImagePulls: false
+    kubernetes_pod_network:
+      cni: "{{ cni }}"
+      cidr: "{{ pod_subnet }}"
+
+- name: Generate join credentials
+  include_tasks: lead-controller.yml
+  when: inventory_hostname == lead_controller
+
+- name: Deploy remaining nodes
+  include_tasks: nodes.yml
+  when: inventory_hostname != lead_controller
