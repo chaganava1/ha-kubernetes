@@ -17,20 +17,6 @@
     state: restarted
 
 ###
-# Worker nodes don't need these so disabled by default, control nodes re-enable.
-#
-
-- name: Stop/Disable VRRP/HAProxy
-  become: true
-  service:
-    name: "{{ item }}"
-    enabled: false
-    state: stopped
-  with_items:
-    - haproxy
-    - keepalived
-
-###
 # Disable swap
 #
 

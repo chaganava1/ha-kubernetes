@@ -31,21 +31,14 @@ cni: calico
 taint_controllers: true
 
 ###
+# Sets the kubeconfig for the ansible_user
+#
+
+set_user_kubeconfig: true
+
+###
 # Set hosts ~/.kube/config
 #
 
 set_host_kubeconfig: false
 host_kubeconfig_dest: ~/.kube/config
-
-###
-# Installs packages and exits role early
-#
-
-install_only: false
-
-###
-# Creates a log of installed packages in the playbook dir
-# 
-
-genereate_release_notes: false
-release_note_file: "{{ playbook_dir }}/release-notes"
