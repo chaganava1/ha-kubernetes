@@ -1,19 +1,25 @@
 Ansible Role: ha-kubernetes
 =========
 
-WORK IN PROGRESS
-
 Ansible role that configures a kubernetes cluster with high availability options using keepalived and HAProxy.
 
 
 <img src="images/ha-diagram.png" alt="ha-diagram" width="600"/>
 
 
+This role installs keepalived and HAproxy before forming a highly available kubernetes cluster.
+
+I'm using roles from @geerlingguy to:
+- install containerd as the container runtime
+- install kubernetes package
+- initiate a control plane node (referred to as the 'lead_controller')
+
+The remaining control plane and worker nodes are then joined to the cluster.
+
 Dependencies
 ------------
 
 Required roles:
-- robertdebock.update_package_cache
 - geerlingguy.containerd
 - geerlingguy.kubernetes
 
@@ -34,11 +40,11 @@ One control plane node is elected as leader, this node will initialise the clust
 all:
   vars:
     ansible_user: vagrant
-    lead_controller: barry
+    lead_controller: *barry*
   children:
     controllers:
       hosts:
-        barry:
+        *barry:*
           ansible_host: 192.168.60.101
           ansible_ssh_private_key_file: .vagrant/machines/control-1/virtualbox/private_key
         robin:
@@ -73,6 +79,16 @@ Virtual IP Address used by VRRP and managed by keepalived.
 api_port: 8443
 ~~~
 The port that HAProxy listens on
+
+~~~
+pod_subnet: 10.252.0.0/16
+~~~
+The subnet that is used to for the pod network
+
+~~~
+cni: calico
+~~~
+The CNI to use. Can be "calico", "flannel" or "weave"
 
 ~~~
 taint_controllers: true
@@ -121,10 +137,8 @@ Tested using:
 
 License
 -------
-
 MIT
 
 Author Information
 ------------------
-
 Authored by gadgieOps.
