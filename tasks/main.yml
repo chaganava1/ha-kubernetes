@@ -19,24 +19,6 @@
   with_items:
     - "{{ packages }}"
 
-- name: configure global settings
-  include_tasks: global/global-config.yml
-
-- name: Pull kubernetes images
-  command: kubeadm config images pull --v=5
-
-- name: Generate release notes
-  include_tasks: global/generate_release_notes.yml
-  when: 
-  - generate_release_notes | bool
-
-  ###
-  # End play if set to only install and not configure
-  #
-
-- meta: end_play
-  when: install_only | bool
-  
   ###
   # Enable HA networking on controller nodes
   #
@@ -44,6 +26,13 @@
 - name: Setup HA networking
   include_tasks: ha/ha-api-network.yml
   when: inventory_hostname in groups.controllers
+
+  ###
+  # Global configurations
+  #
+
+- name: configure global settings
+  include_tasks: global/global-config.yml
 
   ###
   # Set a lead controller based on the alphanumerically lowest ansible_hostname if not already defined
@@ -62,10 +51,14 @@
 
 - name: Deploy cluster
   include_tasks: deploy-nodes/deploy-cluster.yml
-  
+
   ###
-  # Set hosts kubeconfig
+  # Set kubeconfig on the cluster and ansible controller
   #
+
+- name: Set kubeconfigs on controllers
+  include_tasks: deploy-nodes/set-kubeconfig.yml
+  when: inventory_hostname in groups.controllers
 
 - name: Download kubeconfig to host
   fetch:
@@ -78,7 +71,7 @@
   tags: get-kubeconfig
   
   ###
-  # Remove taint from controllers
+  # Set taint on controllers
   #
 
 - name: Set taint status on controllers

@@ -38,7 +38,7 @@
 
 - name: Check if nodes have already joined the cluster
   stat:
-    path: "/etc/kubernetes/pki/apiserver.key"
+    path: "/etc/kubernetes/kubelet.conf"
   register: joined
 
 - name: Join the remaining nodes to the cluster
