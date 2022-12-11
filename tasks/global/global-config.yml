@@ -20,16 +20,16 @@
 # Disable swap
 #
 
-- name: Disable swap
-  ansible.builtin.command: swapoff -av
-  register: swapoff
-  changed_when: '"swapoff" in "{{ swapoff.stdout }}"'
-
 - name: Remove swap ftsab entires
   ansible.builtin.lineinfile:
     path: /etc/fstab
     state: absent
-    regexp: "^swap"
+    regexp: "^.*swap.*$"
+
+- name: Disable swap
+  ansible.builtin.command: swapoff -av
+  register: swapoff
+  changed_when: "'swapoff' in swapoff.stdout"
 
 ###
 # Setup IP Tables as per:
