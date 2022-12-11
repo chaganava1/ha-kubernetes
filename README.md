@@ -105,6 +105,11 @@ Sets if control plane nodes can host pods.
 When transitioning betwen a taint and not taint, and pods that are already scheduled will not be removed. 
 
 ~~~
+set_user_kubeconfig: true
+~~~
+Sets the kubeconfig for the ansible_user. The root user always has its kubeconfig set.
+
+~~~
 set_host_kubeconfig: false
 ~~~
 When set to true, the kubeconfig file is downloaded to the ansible controller host and placed in the directory set by host_kubeconfig_dest
