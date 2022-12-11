@@ -40,6 +40,9 @@
     path: /etc/modules-load.d/kubernetes.conf
     line: "{{ item }}"
     create: true
+    owner: root
+    group: root
+    mode: "0644"
   with_items:
   - br_netfilter
   - overlay

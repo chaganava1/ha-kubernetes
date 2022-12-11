@@ -17,6 +17,9 @@
   ansible.builtin.template:
     src: keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Start/Enable VRRP
   ansible.builtin.service:
@@ -28,6 +31,9 @@
   ansible.builtin.template:
     src: haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Start/Enable HAProxy
   ansible.builtin.service:
