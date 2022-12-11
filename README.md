@@ -40,11 +40,11 @@ One control plane node is elected as leader, this node will initialise the clust
 all:
   vars:
     ansible_user: vagrant
-    lead_controller: *barry*
+    lead_controller: barry
   children:
     controllers:
       hosts:
-        *barry:*
+        barry:
           ansible_host: 192.168.60.101
           ansible_ssh_private_key_file: .vagrant/machines/control-1/virtualbox/private_key
         robin:
