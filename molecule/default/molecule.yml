@@ -4,8 +4,44 @@ dependency:
 driver:
   name: delegated
 platforms:
-  - name: instance
+  - name: controller-1
+    image: "geerlingguy/docker-centos7-ansible:latest"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    groups:
+      - controllers
+  - name: controller-2
+    image: "geerlingguy/docker-centos7-ansible:latest"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    groups:
+      - controllers
+  - name: controller-3
+    image: "geerlingguy/docker-centos7-ansible:latest"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    groups:
+      - controllers
+  - name: worker-1
+    image: "geerlingguy/docker-centos7-ansible:latest"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    groups:
+      - workers
 provisioner:
   name: ansible
+  playbooks:
+      converge.yml
+  inventory:
+    global_vars:
+      - lead_controller: controller-1
 verifier:
   name: ansible
