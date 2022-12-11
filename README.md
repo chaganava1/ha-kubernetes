@@ -4,7 +4,7 @@ Ansible Role: ha-kubernetes
 Ansible role that configures a kubernetes cluster with high availability options using keepalived and HAProxy.
 
 
-<img src="images/ha-diagram.png" alt="ha-diagram" width="600"/>
+<img src="images/ha-diagram.png" alt="ha-diagram" width="800"/>
 
 
 This role installs keepalived and HAproxy before forming a highly available kubernetes cluster.
