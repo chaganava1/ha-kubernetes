@@ -127,13 +127,15 @@ Example Playbook
 
 Collaboration
 -------------
-Please feel free to raise issues and submit pull requests. I have been using this role along side Vagrant to spin up dev and test environments that are in line with my production environment. I am working on making this role more generic and accessible for other usecases.
+Please feel free to raise issues and submit pull requests.
 
 Notes
 -----
 Tested using:
 - Ubuntu 20.04
 - CentOS 7.9
+
+This method of deploying a non production kubernetes environment is admitidly a heavy process. Various tools such as micro-k8s, kind, k3s may be more appropriate for lighter weight deployments.
 
 License
 -------
