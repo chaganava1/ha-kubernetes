@@ -5,13 +5,13 @@
 #
 
 - name: Get cluster control-plane certificate key
-  command: kubeadm token create
+  ansible.builtin.command: kubeadm token create
   register: token
 
 - name: Get cluster control-plane certificate key
-  command: kubeadm init phase upload-certs --upload-certs
+  ansible.builtin.command: kubeadm init phase upload-certs --upload-certs
   register: cert_key
 
 - name: Get CA Key hash
-  shell: openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+  ansible.builtin.shell:
   register: ca_hash

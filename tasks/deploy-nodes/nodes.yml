@@ -5,7 +5,7 @@
 #
 
 - name: Set worker JoinConfiguration
-  set_fact:
+  ansible.builtin.set_fact:
     join_configuration:
       nodeRegistration:
         name: "{{ node_name }}"
@@ -19,7 +19,7 @@
           - "sha256:{{ hostvars[vars['lead_controller']]['ca_hash'].stdout }}"
 
 - name: Set controlPlane JoinConfiguration
-  set_fact:
+  ansible.builtin.set_fact:
     control_join:
       controlPlane:
         localAPIEndpoint: 
@@ -27,20 +27,20 @@
         certificateKey: "{{ hostvars[vars['lead_controller']]['cert_key'].stdout_lines[-1] }}"
 
 - name: Set controller JoinConfiguration
-  set_fact:
+  ansible.builtin.set_fact:
     join_configuration: "{{ join_configuration | combine(control_join) }}"
   when: inventory_hostname in groups.controllers
 
 - name: Deploy the join config
-  template:
+  ansible.builtin.template:
     src: "join-config.j2"
     dest: "/etc/kubernetes/join.config"
 
 - name: Check if nodes have already joined the cluster
-  stat:
+  ansible.builtin.stat:
     path: "/etc/kubernetes/kubelet.conf"
   register: joined
 
 - name: Join the remaining nodes to the cluster
-  command: kubeadm join --config /etc/kubernetes/join.config
+  ansible.builtin.command: kubeadm join --config /etc/kubernetes/join.config
   when: not joined.stat.exists

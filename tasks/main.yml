@@ -5,15 +5,15 @@
   #
 
 - name: Prep Debian
-  include_tasks: global/prep-debian.yml
+  ansible.builtin.include_tasks: global/prep-debian.yml
   when: ansible_os_family == 'Debian'
 
 - name: Prep RedHat
-  include_tasks: global/prep-redhat.yml
+  ansible.builtin.include_tasks: global/prep-redhat.yml
   when: ansible_os_family == 'RedHat'
 
 - name: Keepalived, HAProxy
-  package: 
+  ansible.builtin.package:
     name: "{{ item }}"
     state: present
     update_cache: true
@@ -25,7 +25,7 @@
   #
 
 - name: Install containerd
-  include_role: 
+  ansible.builtin.include_role:
     name: geerlingguy.containerd
 
   ###
@@ -33,15 +33,15 @@
   #
 
 - name: Setup HA networking
-  include_tasks: ha-api-network.yml
+  ansible.builtin.include_tasks: ha-api-network.yml
   when: inventory_hostname in groups.controllers
 
   ###
   # Global configurations
   #
 
-- name: configure global settings
-  include_tasks: global/global-config.yml
+- name: Configure global settings
+  ansible.builtin.include_tasks: global/global-config.yml
 
   ###
   # Set a lead controller based on the alphanumerically lowest ansible_hostname if not already defined
@@ -49,7 +49,7 @@
   #
 
 - name: Set lead controller if not already defined
-  set_fact:
+  ansible.builtin.set_fact:
     lead_controller: "{{ groups.controllers | min }}"
   run_once: true
   when: lead_controller is not defined
@@ -59,30 +59,30 @@
   #
 
 - name: Deploy cluster
-  include_tasks: deploy-nodes/deploy-cluster.yml
+  ansible.builtin.include_tasks: deploy-nodes/deploy-cluster.yml
 
   ###
   # Set kubeconfig on the cluster and ansible controller
   #
 
 - name: Set kubeconfigs on controllers
-  include_tasks: deploy-nodes/set-kubeconfig.yml
+  ansible.builtin.include_tasks: deploy-nodes/set-kubeconfig.yml
   when: inventory_hostname in groups.controllers
 
 - name: Download kubeconfig to host
-  fetch:
+  ansible.builtin.fetch:
     src: /etc/kubernetes/admin.conf
     dest: "{{ host_kubeconfig_dest }}"
     flat: true
-  when: 
-  - inventory_hostname == lead_controller
-  - set_host_kubeconfig | bool
+  when:
+    - inventory_hostname == lead_controller
+    - set_host_kubeconfig | bool
   tags: get-kubeconfig
-  
+
   ###
   # Set taint on controllers
   #
 
 - name: Set taint status on controllers
-  import_tasks: taints.yml
+  ansible.builtin.include_tasks: taints.yml
   when: inventory_hostname in groups.controllers

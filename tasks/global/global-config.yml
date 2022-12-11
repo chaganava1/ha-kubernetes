@@ -6,13 +6,13 @@
 #
 
 - name: Remove cri from disabled plugins list
-  lineinfile:
+  ansible.builtin.ansible.builtin.lineinfile:
     path: /etc/containerd/config.toml
     state: absent
     line: disabled_plugins = ["cri"]
 
 - name: Restart containerd
-  service:
+  ansible.builtin.service:
     name: containerd
     state: restarted
 
@@ -21,10 +21,10 @@
 #
 
 - name: Disable swap
-  command: swapoff -a
+  ansible.builtin.command: swapoff -av
 
 - name: Remove swap ftsab entires
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/fstab
     state: absent
     regexp: "^%swap"
@@ -36,7 +36,7 @@
 
 - name: Set load peristence for br_netfilter and overlay modules
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/modules-load.d/kubernetes.conf
     line: "{{ item }}"
     create: true
@@ -45,7 +45,7 @@
   - overlay
 
 - name: Ensure br_netfilter and overlay modules are loaded
-  modprobe:
+  community.general.modprobe:
     name: "{{ item }}"
     state: present
   with_items:
@@ -53,7 +53,7 @@
   - overlay
 
 - name: Configure IP Tables
-  sysctl:
+  ansible.posix.sysctl:
     name: "{{ item }}"
     value: '1'
     state: present
