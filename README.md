@@ -145,7 +145,7 @@ Tested using:
 - Ubuntu 20.04
 - CentOS 7.9
 
-This method of deploying a non production kubernetes environment is admitidly a heavy process. Various tools such as micro-k8s, kind, k3s may be more appropriate for lighter weight deployments.
+This method of deploying a non production kubernetes environment is admitidly a heavy process. Various tools such as micro-k8s, kind, k3s may be more appropriate for lighter weight solutions.
 
 License
 -------
