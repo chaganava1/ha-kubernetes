@@ -33,7 +33,7 @@
   #
 
 - name: Setup HA networking
-  include_tasks: ha/ha-api-network.yml
+  include_tasks: ha-api-network.yml
   when: inventory_hostname in groups.controllers
 
   ###
