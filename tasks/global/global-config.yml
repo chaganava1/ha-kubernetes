@@ -22,12 +22,14 @@
 
 - name: Disable swap
   ansible.builtin.command: swapoff -av
+  register: swapoff
+  changed_when: '"swapoff" in "{{ swapoff.stdout }}"'
 
 - name: Remove swap ftsab entires
   ansible.builtin.lineinfile:
     path: /etc/fstab
     state: absent
-    regexp: "^%swap"
+    regexp: "^swap"
 
 ###
 # Setup IP Tables as per:
@@ -44,16 +46,16 @@
     group: root
     mode: "0644"
   with_items:
-  - br_netfilter
-  - overlay
+    - br_netfilter
+    - overlay
 
 - name: Ensure br_netfilter and overlay modules are loaded
   community.general.modprobe:
     name: "{{ item }}"
     state: present
   with_items:
-  - br_netfilter
-  - overlay
+    - br_netfilter
+    - overlay
 
 - name: Configure IP Tables
   ansible.posix.sysctl:
