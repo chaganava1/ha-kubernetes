@@ -16,13 +16,13 @@
           apiServerEndpoint: "{{ vrrp_virtual_ip }}:{{ haproxy_listen_port }}"
           token: "{{ hostvars[vars['lead_controller']]['token'].stdout }}"
           caCertHashes:
-          - "sha256:{{ hostvars[vars['lead_controller']]['ca_hash'].stdout }}"
+            - "sha256:{{ hostvars[vars['lead_controller']]['ca_hash'].stdout }}"
 
 - name: Set controlPlane JoinConfiguration
   ansible.builtin.set_fact:
     control_join:
       controlPlane:
-        localAPIEndpoint: 
+        localAPIEndpoint:
           advertiseAddress: "{{ ansible_host }}"
         certificateKey: "{{ hostvars[vars['lead_controller']]['cert_key'].stdout_lines[-1] }}"
 

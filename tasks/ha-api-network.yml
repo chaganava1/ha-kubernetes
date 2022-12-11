@@ -2,15 +2,15 @@
 - name: Get cluster interface
   ansible.builtin.set_fact:
     cluster_interface: "{{ item }}"
-  when: 
-  - hostvars[inventory_hostname]['ansible_' + item]['ipv4'] is defined
-  - hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] == ansible_host
+  when:
+    - hostvars[inventory_hostname]['ansible_' + item]['ipv4'] is defined
+    - hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] == ansible_host
   with_items:
     - "{{ ansible_interfaces }}"
 
 - name: Increase VRRP Priority of lead controller higher for determinism
   ansible.builtin.set_fact:
-    vrrp_pri: "{{ vrrp_pri  | int + 1 }}"
+    vrrp_pri: "{{ vrrp_pri | int + 1 }}"
   when: ansible_hostname == lead_controller
 
 - name: Add VRRP config
