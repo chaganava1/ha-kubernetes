@@ -13,7 +13,7 @@
           address: "{{ ansible_host }}"
       discovery:
         bootstrapToken:
-          apiServerEndpoint: "{{ api_endpoint }}:{{ api_port }}"
+          apiServerEndpoint: "{{ vrrp_virtual_ip }}:{{ haproxy_listen_port }}"
           token: "{{ hostvars[vars['lead_controller']]['token'].stdout }}"
           caCertHashes:
           - "sha256:{{ hostvars[vars['lead_controller']]['ca_hash'].stdout }}"

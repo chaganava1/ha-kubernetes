@@ -33,10 +33,10 @@
     kubernetes_config_cluster_configuration:
       networking:
         podSubnet: "{{ pod_subnet }}"
-      controlPlaneEndpoint: "{{ api_endpoint }}:{{ api_port }}"
+      controlPlaneEndpoint: "{{ vrrp_virtual_ip }}:{{ haproxy_listen_port }}"
       apiServer:
         certSans:
-        - "{{ api_endpoint }}"
+        - "{{ vrrp_virtual_ip }}"
         - "{{ ansible_host }}"
     kubernetes_config_kubelet_configuration:
       cgroupDriver: "systemd"

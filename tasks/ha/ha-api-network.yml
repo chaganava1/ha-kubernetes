@@ -37,6 +37,6 @@
 
 - name: Wait for API Reachability
   wait_for:
-    host: "{{ api_endpoint }}"
-    port: "{{ api_port }}"
+    host: "{{ vrrp_virtual_ip }}"
+    port: "{{ haproxy_listen_port }}"
     delay: 2

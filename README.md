@@ -76,12 +76,12 @@ node_name: "{{ ansible_hostname }}"
 Set the node name for each node. By default, it uses the nodes hostname. node_name: "{{ inventory_name }}" will set the node name to the alias name defined in the inventory file.
 
 ~~~
-api_endpoint: "192.168.60.100"
+vrrp_virtual_ip: "192.168.60.100"
 ~~~
 Virtual IP Address used by VRRP and managed by keepalived. 
 
 ~~~
-api_port: 8443
+haproxy_listen_port: 8443
 ~~~
 The port that HAProxy listens on
 
@@ -131,8 +131,8 @@ Example Playbook
       vars:
       - taint_controllers: true
       - set_host_kubeconfig: true
-      - api_endpoint: "10.252.1.1"
-      - api_port: "38080"
+      - vrrp_virtual_ip: "10.252.1.1"
+      - haproxy_listen_port: "38080"
 ~~~
 
 Collaboration

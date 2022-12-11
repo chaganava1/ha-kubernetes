@@ -30,7 +30,7 @@ vrrp_instance {{ ansible_host }} {
         auth_pass k8s_$ooPaPAzz
     }
     virtual_ipaddress {
-        {{ api_endpoint }}
+        {{ vrrp_virtual_ip }}
     }
     track_script {
       chk_haproxy
