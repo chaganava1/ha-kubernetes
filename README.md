@@ -71,6 +71,11 @@ If no lead controller is set, the alpha-numerically lowest controller will be dy
 Role Variables
 --------------
 ~~~
+node_name: "{{ ansible_hostname }}"
+~~~
+Set the node name for each node. By default, it uses the nodes hostname. node_name: "{{ inventory_name }}" will set the node name to the alias name defined in the inventory file.
+
+~~~
 api_endpoint: "192.168.60.100"
 ~~~
 Virtual IP Address used by VRRP and managed by keepalived. 
