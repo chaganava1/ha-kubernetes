@@ -6,7 +6,7 @@
 #
 
 - name: Remove cri from disabled plugins list
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/containerd/config.toml
     state: absent
     line: disabled_plugins = ["cri"]
