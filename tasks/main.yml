@@ -6,7 +6,6 @@
 
 - name: Test input vars
   ansible.builtin.include_tasks: asserts.yml
-  tags: assert
 
   ###
   # Install HA components

@@ -1,32 +1,27 @@
 ---
 - name: Include supported vars
   include_vars: supported-values.yml
-  tags: assert
 
 - name: Ensure valid CNI has been defined
   ansible.builtin.assert:
     that: cri in supported_cri
     msg: "{{ cri }} is not a supported CRI"
-  tags: assert
   run_once: true
 
 - name: Ensure valid CNI has been defined
   ansible.builtin.assert:
     that: cni in supported_cni
     msg: "{{ cni }} is not a supported CNI"
-  tags: assert
   run_once: true
 
 - name: Ensure vrrp_virtual_ip is valid
   ansible.builtin.assert:
     that: vrrp_virtual_ip | ansible.utils.ipaddr
     msg: "{{ vrrp_virtual_ip }} is not a valid IP address"
-  tags: assert
   run_once: true
 
 - name: Ensure pod_subnet is valid
   ansible.builtin.assert:
     that: pod_subnet | ansible.utils.ipaddr
     msg: "{{ pod_subnet }} is not a valid subnet"
-  tags: assert
   run_once: true
