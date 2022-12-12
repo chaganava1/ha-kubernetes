@@ -1,6 +1,6 @@
 ---
 - name: Include supported vars
-  include_vars: supported-values.yml
+  ansible.builtin.include_vars: supported-values.yml
 
 - name: Ensure valid CNI has been defined
   ansible.builtin.assert:
