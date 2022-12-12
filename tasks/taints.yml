@@ -1,32 +1,33 @@
 ---
 - name: Get node spec
   become: false
-  command: kubectl get nodes "{{ node_name }}" -o=jsonpath='{.spec}' 
+  ansible.builtin.command: kubectl get nodes "{{ node_name }}" -o=jsonpath='{.spec}'
   register: node_spec
+  changed_when: node_spec.rc != 0
 
 - name: Store node spec as JSON
-  set_fact:
+  ansible.builtin.set_fact:
     node_spec_json: "{{ node_spec.stdout | from_json }}"
 
 - name: Get current taint status
-  set_fact:
+  ansible.builtin.set_fact:
     taint_status: true
-  when: 
-  - node_spec_json.taints is defined
-  - item.effect == "NoSchedule"
-  - item.key == "node-role.kubernetes.io/control-plane"
+  when:
+    - node_spec_json.taints is defined
+    - item.effect == "NoSchedule"
+    - item.key == "node-role.kubernetes.io/control-plane"
   with_items: "{{ node_spec_json.taints }}"
 
 - name: Allow pods on the control plane
   become: false
-  command: kubectl taint nodes {{ node_name }} node-role.kubernetes.io/control-plane-
-  when: 
-  - not taint_controllers
-  - taint_status is defined
+  ansible.builtin.command: kubectl taint nodes {{ node_name }} node-role.kubernetes.io/control-plane-
+  when:
+    - not taint_controllers
+    - taint_status is defined
 
 - name: Deny pods on the control plane
   become: false
-  command: kubectl taint nodes {{ node_name }} node-role.kubernetes.io/control-plane:NoSchedule
+  ansible.builtin.command: kubectl taint nodes {{ node_name }} node-role.kubernetes.io/control-plane:NoSchedule
   when:
-  - taint_controllers
-  - taint_status is not defined
+    - taint_controllers
+    - taint_status is not defined

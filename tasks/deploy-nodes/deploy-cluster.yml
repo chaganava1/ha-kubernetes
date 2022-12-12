@@ -5,12 +5,12 @@
   #
 
 - name: Set lead controller to 'control_plane' for geerlingguy.kubernetes
-  set_fact:
+  ansible.builtin.set_fact:
     kubernetes_role: "control_plane"
   when: inventory_hostname == lead_controller
 
 - name: Set non lead controllers to "null" to skip initialization in geerlingguy.kubernetes
-  set_fact:
+  ansible.builtin.set_fact:
     kubernetes_role: "null"
   when: inventory_hostname != lead_controller
 
@@ -19,7 +19,7 @@
   #
 
 - name: Install Kubernetes and start cluster
-  include_role:
+  ansible.builtin.include_role:
     name: geerlingguy.kubernetes
   vars:
     kubernetes_config_init_configuration:
@@ -36,8 +36,8 @@
       controlPlaneEndpoint: "{{ vrrp_virtual_ip }}:{{ haproxy_listen_port }}"
       apiServer:
         certSans:
-        - "{{ vrrp_virtual_ip }}"
-        - "{{ ansible_host }}"
+          - "{{ vrrp_virtual_ip }}"
+          - "{{ ansible_host }}"
     kubernetes_config_kubelet_configuration:
       cgroupDriver: "systemd"
       address: "{{ ansible_host }}"
@@ -47,9 +47,9 @@
       cidr: "{{ pod_subnet }}"
 
 - name: Generate join credentials
-  include_tasks: lead-controller.yml
+  ansible.builtin.include_tasks: lead-controller.yml
   when: inventory_hostname == lead_controller
 
 - name: Deploy remaining nodes
-  include_tasks: nodes.yml
+  ansible.builtin.include_tasks: nodes.yml
   when: inventory_hostname != lead_controller

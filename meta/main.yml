@@ -1,4 +1,27 @@
----
+galaxy_info:
+  role_name: ha_kubernetes
+  author: gadgieOps
+  description: Installs a highly available kubernetes cluster with keepalived and haproxy
+
+  license: MIT
+
+  min_ansible_version: "2.4"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+    - name: EL
+      versions:
+        - "7"
+
+  galaxy_tags:
+    - kubernetes
+    - containerd
+    - vrrp
+    - keepalived
+    - haproxy
+
 dependencies:
   - role: geerlingguy.containerd
     when: false

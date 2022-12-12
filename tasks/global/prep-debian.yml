@@ -4,14 +4,14 @@
 #
 
 - name: Add an apt signing key for Kubernetes
-  apt_key:
+  ansible.builtin.apt_key:
     url: "{{ item }}"
     state: present
   with_items:
     - https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
 - name: Add apt repository for Kubernetes
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ item }}"
     state: present
   with_items:

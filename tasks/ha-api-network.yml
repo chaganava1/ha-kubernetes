@@ -1,42 +1,48 @@
 ---
 - name: Get cluster interface
-  set_fact:
+  ansible.builtin.set_fact:
     cluster_interface: "{{ item }}"
-  when: 
-  - hostvars[inventory_hostname]['ansible_' + item]['ipv4'] is defined
-  - hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] == ansible_host
+  when:
+    - hostvars[inventory_hostname]['ansible_' + item]['ipv4'] is defined
+    - hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] == ansible_host
   with_items:
     - "{{ ansible_interfaces }}"
 
 - name: Increase VRRP Priority of lead controller higher for determinism
-  set_fact:
-    vrrp_pri: "{{ vrrp_pri  | int + 1 }}"
+  ansible.builtin.set_fact:
+    vrrp_pri: "{{ vrrp_pri | int + 1 }}"
   when: ansible_hostname == lead_controller
 
 - name: Add VRRP config
-  template:
+  ansible.builtin.template:
     src: keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Start/Enable VRRP
-  service:
+  ansible.builtin.service:
     name: keepalived
     enabled: true
     state: restarted
 
 - name: Add HAProxy config
-  template:
+  ansible.builtin.template:
     src: haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Start/Enable HAProxy
-  service:
+  ansible.builtin.service:
     name: haproxy
     enabled: true
     state: restarted
 
 - name: Wait for API Reachability
-  wait_for:
+  ansible.builtin.wait_for:
     host: "{{ vrrp_virtual_ip }}"
     port: "{{ haproxy_listen_port }}"
     delay: 2

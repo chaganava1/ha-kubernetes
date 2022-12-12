@@ -1,0 +1,7 @@
+supported_cri:
+  - containerd
+
+supported_cni:
+  - calico
+  - flannel
+  - weave

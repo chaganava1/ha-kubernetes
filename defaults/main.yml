@@ -11,8 +11,8 @@ node_name: "{{ ansible_hostname }}"
 
 ###
 # Networking Options
-# 
-# - All nodes must be on the same subnet. 
+#
+# - All nodes must be on the same subnet.
 # - vrrp_virtual_ip is used by VRRP as a stable virtual IP for the k8s API Server
 # - haproxy_listen_port is the port exposed by HAProxy
 #
