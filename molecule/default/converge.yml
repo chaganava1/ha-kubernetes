@@ -1,8 +1,25 @@
 ---
 - name: Converge
   hosts: all
-  gather_facts: false
+  become: true
+  gather_facts: true
   tasks:
+
+    - name: "Get controller-1 IP"
+      ansible.builtin.command: 
+        cmd: 'docker inspect --format \{\{.NetworkSettings.IPAddress\}\} {{ ansible_hostname }}'
+      register: ipaddr
+      delegate_to: localhost
+      changed_when: ipaddr.stdout | ansible.utils.ipaddr
+    
+    #- name: Set ansible_host to controller-1 IP
+    #  ansible.builtin.set_fact:
+    #    ansible_host: "{{ ipaddr.stdout }}"
+
     - name: "Include gadgieOps.ha-kubernetes"
       ansible.builtin.include_role:
         name: "gadgieOps.ha-kubernetes"
+      vars:
+        vrrp_virtual_ip: "172.17.99.99"
+        lead_controller: controller-1
+        ansible_user: root

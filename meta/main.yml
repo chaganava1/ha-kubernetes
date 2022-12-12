@@ -1,6 +1,6 @@
 galaxy_info:
   role_name: ha_kubernetes
-  author: gadgieOps
+  author: gadgieops
   description: Installs a highly available kubernetes cluster with keepalived and haproxy
 
   license: MIT

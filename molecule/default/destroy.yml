@@ -1,24 +1,13 @@
----
 - name: Destroy
   hosts: localhost
   connection: local
   gather_facts: false
-  no_log: "{{ molecule_no_log }}"
   tasks:
-    # Developer must implement.
-
-    # Mandatory configuration for Molecule to function.
-
-    - name: Populate instance config
-      ansible.builtin.set_fact:
-        instance_conf: {}
-
-    - name: Dump instance config
-      ansible.builtin.copy:
-        content: |
-          # Molecule managed
-
-          {{ instance_conf | to_json | from_json | to_yaml }}
-        dest: "{{ molecule_instance_config }}"
-        mode: 0600
-      when: server.changed | default(false) | bool
+    - name: Destroy docker network
+      community.docker.docker_network:
+        name: molecule_network
+        ipam_config:
+        - subnet: 10.240.0.0/24
+          gateway: 10.240.0.1
+          iprange: 10.240.0.0/26
+        state: absent
