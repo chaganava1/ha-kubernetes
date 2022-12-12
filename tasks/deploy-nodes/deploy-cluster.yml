@@ -24,7 +24,7 @@
   vars:
     kubernetes_config_init_configuration:
       localAPIEndpoint:
-        advertiseAddress: "{{ ansible_host }}"
+        advertiseAddress: "{{ node_ip }}"
       nodeRegistration:
         name: "{{ node_name }}"
         kubeletExtraArgs:
