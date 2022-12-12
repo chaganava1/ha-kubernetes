@@ -10,7 +10,7 @@
       nodeRegistration:
         name: "{{ node_name }}"
         kubeletExtraArgs:
-          address: "{{ ansible_host }}"
+          address: "{{ node_ip }}"
       discovery:
         bootstrapToken:
           apiServerEndpoint: "{{ vrrp_virtual_ip }}:{{ haproxy_listen_port }}"
@@ -23,7 +23,7 @@
     control_join:
       controlPlane:
         localAPIEndpoint:
-          advertiseAddress: "{{ ansible_host }}"
+          advertiseAddress: "{{ node_ip }}"
         certificateKey: "{{ hostvars[vars['lead_controller']]['cert_key'].stdout_lines[-1] }}"
 
 - name: Set controller JoinConfiguration
