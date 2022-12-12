@@ -66,3 +66,34 @@
     - net.bridge.bridge-nf-call-iptables
     - net.bridge.bridge-nf-call-ip6tables
     - net.ipv4.ip_forward
+
+###
+# Set host names if ansible_host is declared as a hostname
+#
+
+- name: Resolve hostname, set node_ip set /etc/hosts
+  when: not ansible_host | ansible.utils.ipaddr
+  block:
+
+    - name: Resolve IP when ansible_host is hostname
+      ansible.builtin.debug:
+        msg: "{{ lookup('community.general.dig', '{{ ansible_host }}') }}"
+      register: ipaddr
+
+    - name: Set ip fact
+      ansible.builtin.set_fact:
+        node_ip: "{{ ipaddr.msg }}"
+
+    - name: Make sure /etc/hosts exists
+      ansible.builtin.file:
+        path: /etc/hosts
+        owner: root
+        group: adm
+        mode: "0644"
+        state: file
+
+    - name: Add /etc/hosts entires
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "{{ hostvars[item].node_ip }} {{ hostvars[item].ansible_host }}"
+      with_items: "{{ groups.all }}"
