@@ -1,7 +1,7 @@
 Ansible Role: ha-kubernetes
 =========
 
-Ansible role that configures a kubernetes cluster with high availability options using keepalived and HAProxy.
+Ansible role that configures a kubernetes cluster with high availability options using Kubeadm, Keepalived and HAProxy.
 
 
 <img src="images/ha-diagram.png" alt="ha-diagram" width="800"/>
@@ -26,6 +26,13 @@ Required roles:
 Can be installed using:
 ~~~
 ansible-galaxy install -r requirements.yml
+~~~
+
+Python packages:
+- dnspython (only when using FQDNs for ansible_host, see inventory configuration below)
+
+~~~
+pip install dnspython
 ~~~
 
 Inventory configuration
@@ -67,6 +74,8 @@ all:
 ~~~
 
 If no lead controller is set, the alpha-numerically lowest controller will be dynamically set as the lead controller. The lead controller has no operational significance to the cluster, it is simply the node on which the cluster is intialized.
+
+*Note:* when using FQDNs for ansible_host, dnspython package is required to resolve the IP address. This role explicitly sets a bind interface for VRRP which needs the cluster_interface to be set. 
 
 Role Variables
 --------------

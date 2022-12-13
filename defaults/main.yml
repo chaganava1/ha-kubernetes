@@ -4,10 +4,11 @@
 cri: containerd
 
 ###
-# Node Name
+# Node Info
 #
 
 node_name: "{{ ansible_hostname }}"
+node_ip: "{{ ansible_host }}"
 
 ###
 # Networking Options

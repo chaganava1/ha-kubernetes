@@ -24,11 +24,11 @@
   vars:
     kubernetes_config_init_configuration:
       localAPIEndpoint:
-        advertiseAddress: "{{ ansible_host }}"
+        advertiseAddress: "{{ node_ip }}"
       nodeRegistration:
         name: "{{ node_name }}"
         kubeletExtraArgs:
-          address: "{{ ansible_host }}"
+          address: "{{ node_ip }}"
     kubernetes_kubeadm_init_extra_opts: "--upload-certs"
     kubernetes_config_cluster_configuration:
       networking:
@@ -38,9 +38,10 @@
         certSans:
           - "{{ vrrp_virtual_ip }}"
           - "{{ ansible_host }}"
+          - "{{ node_ip }}"
     kubernetes_config_kubelet_configuration:
       cgroupDriver: "systemd"
-      address: "{{ ansible_host }}"
+      address: "{{ node_ip }}"
       serializeImagePulls: false
     kubernetes_pod_network:
       cni: "{{ cni }}"

@@ -36,19 +36,19 @@
     name: geerlingguy.containerd
 
   ###
+  # Global configurations
+  #
+
+- name: Configure global settings
+  ansible.builtin.include_tasks: global/global-config.yml
+
+  ###
   # Enable HA networking on controller nodes
   #
 
 - name: Setup HA networking
   ansible.builtin.include_tasks: ha-api-network.yml
   when: inventory_hostname in groups.controllers
-
-  ###
-  # Global configurations
-  #
-
-- name: Configure global settings
-  ansible.builtin.include_tasks: global/global-config.yml
 
   ###
   # Set a lead controller based on the alphanumerically lowest ansible_hostname if not already defined
