@@ -13,19 +13,47 @@
     vrrp_pri: "{{ vrrp_pri | int + 1 }}"
   when: ansible_hostname == lead_controller
 
-- name: Add VRRP config
-  ansible.builtin.template:
-    src: keepalived.conf.j2
-    dest: /etc/keepalived/keepalived.conf
-    owner: root
-    group: root
-    mode: "0644"
+  ###
+  # Deploy keepalived
+  #
 
-- name: Start/Enable VRRP
-  ansible.builtin.service:
-    name: keepalived
-    enabled: true
-    state: restarted
+- name: Deploy keepalived
+  ansible.builtin.include_role:
+    name: ansible-keepalived
+  vars:
+    keepalived_global_defs:
+      - enable_script_security
+      - script_user "{{ ansible_user }}"
+    keepalived_scripts:
+      chk_haproxy:
+        check_script: "pgrep haproxy"
+    keepalived_instances:
+      vrrp:
+        state: MASTER
+        interface: "{{ cluster_interface }}"
+        virtual_router_id: 42
+        priority: "{{ vrrp_pri }}"
+        advert_int: 1
+        unicast_src_ip: "{{ node_ip }}"
+        authentication_password: fregsr9
+        vips:
+          - "{{ vrrp_virtual_ip }} dev {{ cluster_interface }}"
+        track_scripts:
+          - chk_haproxy
+
+#- name: Add VRRP config
+#  ansible.builtin.template:
+#    src: keepalived.conf.j2
+#    dest: /etc/keepalived/keepalived.conf
+#    owner: root
+#    group: root
+#    mode: "0644"
+
+#- name: Start/Enable VRRP
+#  ansible.builtin.service:
+#    name: keepalived
+#    enabled: true
+#    state: restarted
 
 - name: Add HAProxy config
   ansible.builtin.template:

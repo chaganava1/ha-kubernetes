@@ -19,7 +19,7 @@
   ansible.builtin.include_tasks: global/prep-redhat.yml
   when: ansible_os_family == 'RedHat'
 
-- name: Keepalived, HAProxy
+- name: HAProxy
   ansible.builtin.package:
     name: "{{ item }}"
     state: present

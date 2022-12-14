@@ -27,3 +27,5 @@ dependencies:
     when: false
   - role: geerlingguy.kubernetes
     when: false
+  - role: ansible-keepalived
+    when: false
