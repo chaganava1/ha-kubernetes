@@ -8,7 +8,6 @@ cri: containerd
 #
 
 node_name: "{{ ansible_hostname }}"
-node_ip: "{{ ansible_host }}"
 
 ###
 # Networking Options

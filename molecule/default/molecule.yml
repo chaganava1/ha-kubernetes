@@ -17,6 +17,7 @@ platforms:
     pre_build_image: true
     groups:
       - controllers
+    network_mode: host
     #networks:
     #  - name: molecule_network
 
@@ -30,6 +31,7 @@ platforms:
     pre_build_image: true
     groups:
       - controllers
+    network_mode: host
     #networks:
     #  - name: molecule_network
 
@@ -43,6 +45,7 @@ platforms:
     pre_build_image: true
     groups:
       - controllers
+    network_mode: host
     #networks:
     #  - name: molecule_network
 
@@ -56,6 +59,7 @@ platforms:
     pre_build_image: true
     groups:
       - workers
+    network_mode: host
     #networks:
     #  - name: molecule_network
 
@@ -64,7 +68,14 @@ provisioner:
   Playbooks:
     converge: converge.yml
   inventory:
-    global_vars:
-      - lead_controller: controller-1
+    host_vars:
+      controller-1:
+        node_ip: "192.168.60.101"
+      controller-2:
+        node_ip: "192.168.60.102"
+      controller-3:
+        node_ip: "192.168.60.103"
+      worker-1:
+        node_ip: "192.168.60.111"
 verifier:
   name: ansible
