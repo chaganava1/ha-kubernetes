@@ -38,22 +38,9 @@
         authentication_password: fregsr9
         vips:
           - "{{ vrrp_virtual_ip }} dev {{ cluster_interface }}"
+        unicast_peers: "{{ groups.controllers | map('extract', hostvars, ['node_ip']) | list }}"
         track_scripts:
           - chk_haproxy
-
-#- name: Add VRRP config
-#  ansible.builtin.template:
-#    src: keepalived.conf.j2
-#    dest: /etc/keepalived/keepalived.conf
-#    owner: root
-#    group: root
-#    mode: "0644"
-
-#- name: Start/Enable VRRP
-#  ansible.builtin.service:
-#    name: keepalived
-#    enabled: true
-#    state: restarted
 
 - name: Add HAProxy config
   ansible.builtin.template:
