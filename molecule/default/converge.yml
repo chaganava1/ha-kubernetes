@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: "Include gadgieOps.ha-kubernetes"
+      ansible.builtin.include_role:
+        name: "gadgieOps.ha-kubernetes"
+      vars:
+        vrrp_virtual_ip: "192.168.60.100"
+        lead_controller: controller-1
+        ansible_user: root

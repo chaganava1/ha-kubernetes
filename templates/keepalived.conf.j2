@@ -20,8 +20,8 @@ vrrp_instance {{ ansible_host }} {
     unicast_src_ip {{ ansible_host }}
     unicast_peer {
 {% for host in groups['controllers'] %}
-{% if hostvars[host]['ansible_host'] !=  ansible_host  %}
-        {{ hostvars[host]['ansible_host'] }}
+{% if hostvars[host].node_ip !=  node_ip  %}
+        {{ hostvars[host].node_ip }}
 {% endif %}
 {% endfor %}
     }

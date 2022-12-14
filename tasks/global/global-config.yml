@@ -29,7 +29,8 @@
 - name: Disable swap
   ansible.builtin.command: swapoff -av
   register: swapoff
-  changed_when: "'swapoff' in swapoff.stdout"
+  failed_when: swapoff.stderr | length > 0
+  changed_when: swapoff.stdout| length > 0
 
 ###
 # Setup IP Tables as per:
@@ -68,13 +69,29 @@
     - net.ipv4.ip_forward
 
 ###
-# Set host names if ansible_host is declared as a hostname
+# Set node_ip
+# Due to the bare metal requirements, we need to know the IP address of the NIC we are communicating with
+# This can be set in different ways:
+#   - Explicitly defining a role variable
+#   - Setting ansible_host to a FQDN
+#   - Setting ansible_host to a IP address
+#
+# node_ip is set depending in order of precedence:
+#   - Explicity assigned
+#   - ansible_host: FQDN
+#   - ansible_host: IP address
 #
 
-- name: Resolve hostname, set node_ip set /etc/hosts
-  when: not ansible_host | ansible.utils.ipaddr
-  block:
+- name: Set node_ip as a fact when explicity defined
+  ansible.builtin.set_fact:
+    node_ip: "{{ node_ip }}"
+  when: node_ip is defined
 
+- name: Resolve hostname, set node_ip set /etc/hosts
+  when: 
+  - not ansible_host | ansible.utils.ipaddr
+  - node_ip is not defined
+  block:
     - name: Resolve IP when ansible_host is hostname
       ansible.builtin.debug:
         msg: "{{ lookup('community.general.dig', '{{ ansible_host }}') }}"
@@ -97,3 +114,8 @@
         path: /etc/hosts
         line: "{{ hostvars[item].node_ip }} {{ hostvars[item].ansible_host }}"
       with_items: "{{ groups.all }}"
+
+- name: Set node_ip if ansible_host is an IP address and not explicitly defined
+  ansible.builtin.set_fact:
+    node_ip: "{{ ansible_host }}"
+  when: node_ip is not defined
