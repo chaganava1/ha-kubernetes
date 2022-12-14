@@ -88,9 +88,9 @@
   when: node_ip is defined
 
 - name: Resolve hostname, set node_ip set /etc/hosts
-  when: 
-  - not ansible_host | ansible.utils.ipaddr
-  - node_ip is not defined
+  when:
+    - not ansible_host | ansible.utils.ipaddr
+    - node_ip is not defined
   block:
     - name: Resolve IP when ansible_host is hostname
       ansible.builtin.debug:
