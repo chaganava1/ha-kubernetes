@@ -11,7 +11,7 @@
 - name: Increase VRRP Priority of lead controller higher for determinism
   ansible.builtin.set_fact:
     vrrp_pri: "{{ vrrp_pri | int + 1 }}"
-  when: ansible_hostname == lead_controller
+  when: inventory_hostname == lead_controller
 
   ###
   # Deploy keepalived
