@@ -19,7 +19,7 @@
 
 - name: Deploy keepalived
   ansible.builtin.include_role:
-    name: ansible-keepalived
+    name: evrardjp.keepalived
   vars:
     keepalived_global_defs:
       - enable_script_security

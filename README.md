@@ -16,8 +16,7 @@ Required roles:
 ~~~
 - src: geerlingguy.containerd
 - src: geerlingguy.kubernetes
-- name: ansible-keepalived
-  src: https://github.com/evrardjp/ansible-keepalived.git
+- src: evrardjp.keepalived
 - src: robertdebock.haproxy
 ~~~
 

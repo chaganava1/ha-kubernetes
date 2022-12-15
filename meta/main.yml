@@ -27,7 +27,7 @@ dependencies:
     when: false
   - role: geerlingguy.kubernetes
     when: false
-  - role: ansible-keepalived
+  - role: evrardjp.keepalived
     when: false
   - role: robertdebock.haproxy
     when: false
