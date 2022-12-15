@@ -12,14 +12,13 @@ This role installs keepalived and HAproxy before forming a highly available kube
 Dependencies
 ------------
 
-I am using the excellent work of others to achieve 
-
 Required roles:
 ~~~
 - src: geerlingguy.containerd
 - src: geerlingguy.kubernetes
 - name: ansible-keepalived
   src: https://github.com/evrardjp/ansible-keepalived.git
+- src: robertdebock.haproxy
 ~~~
 
 Can be installed using:
