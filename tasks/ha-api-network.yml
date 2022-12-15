@@ -50,8 +50,6 @@
   ansible.builtin.template:
     src: backend-servers.j2
     dest: "{{ role_path }}/vars/backend-servers.yml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
     mode: "0644"
   delegate_to: localhost
 
