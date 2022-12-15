@@ -7,21 +7,20 @@ Ansible role that configures a kubernetes cluster with high availability options
 <img src="images/ha-diagram.png" alt="ha-diagram" width="800"/>
 
 
-This role installs keepalived and HAproxy before forming a highly available kubernetes cluster.
-
-I'm using roles from @geerlingguy to:
-- install containerd as the container runtime
-- install kubernetes package
-- initiate a control plane node (referred to as the 'lead_controller')
-
-The remaining control plane and worker nodes are then joined to the cluster.
+This role installs keepalived and HAproxy before forming a highly available kubernetes cluster. The cluster is initiated on a single controle plane node (reffered to as the lead_controller, see Inventory configuration). All remaining nodes are joined to the lead_controller after initiation.
 
 Dependencies
 ------------
 
+I am using the excellent work of others to achieve 
+
 Required roles:
-- geerlingguy.containerd
-- geerlingguy.kubernetes
+~~~
+- src: geerlingguy.containerd
+- src: geerlingguy.kubernetes
+- name: ansible-keepalived
+  src: https://github.com/evrardjp/ansible-keepalived.git
+~~~
 
 Can be installed using:
 ~~~
@@ -35,13 +34,19 @@ Python packages:
 pip install dnspython
 ~~~
 
+lead_controller
+---------------
+
+One control plane node is elected as leader, this node will initialise the cluster and all other nodes will join. This should be set explicitly as a global var in the Inventory or assigned as a role var (See Inventory Configuration and Role Variables below). If lead_controller is not set, the role will chose the alphanumerically lowest inventory name to assign as the lead_controller. The lead_controller has no operational significance to the cluster, it is simply the node on which the cluster is intialized.
+
+
 Inventory configuration
 -----------------------
 
 This role requires that control plane nodes are a part of the "controllers" group and worker nodes are a part of the "workers" group.  
 
 
-One control plane node is elected as leader, this node will initialise the cluster and all other nodes will join. This should be set using the "lead_controller: {{ inventory_name }}" global variable. The following example inventory file shows the node named "barry" has the lead controller.
+The following example inventory file shows the node named "barry" as the lead_controller.
 
 ~~~
 all:
@@ -73,12 +78,15 @@ all:
           ansible_ssh_private_key_file: .vagrant/machines/worker-3/virtualbox/private_key
 ~~~
 
-If no lead controller is set, the alpha-numerically lowest controller will be dynamically set as the lead controller. The lead controller has no operational significance to the cluster, it is simply the node on which the cluster is intialized.
-
 *Note:* when using FQDNs for ansible_host, dnspython package is required to resolve the IP address. This role explicitly sets a bind interface for VRRP which needs the cluster_interface to be set. 
 
 Role Variables
 --------------
+~~~
+lead_controller: "{{ lead_controller_inventory_hostname }}"
+~~~
+Set the lead_controller of the cluster. This can also be set in the inventory or not declared at all. It should be set to an inventory hostname. 
+
 ~~~
 node_name: "{{ ansible_hostname }}"
 ~~~
