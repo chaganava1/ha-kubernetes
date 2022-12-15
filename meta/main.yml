@@ -29,3 +29,5 @@ dependencies:
     when: false
   - role: ansible-keepalived
     when: false
+  - role: robertdebock.haproxy
+    when: false
