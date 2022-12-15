@@ -20,6 +20,8 @@ Required roles:
 - src: robertdebock.haproxy
 ~~~
 
+Please send your support to the excellent authors of these roles!
+
 Can be installed using:
 ~~~
 ansible-galaxy install -r requirements.yml
