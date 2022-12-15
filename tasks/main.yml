@@ -19,7 +19,7 @@
   ansible.builtin.include_tasks: asserts.yml
 
   ###
-  # Install HA components
+  # Prep nodes
   #
 
 - name: Prep Debian
@@ -30,13 +30,9 @@
   ansible.builtin.include_tasks: global/prep-redhat.yml
   when: ansible_os_family == 'RedHat'
 
-- name: HAProxy
+- name: Update packages
   ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
     update_cache: true
-  with_items:
-    - "{{ packages }}"
 
   ###
   # Install CRI
