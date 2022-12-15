@@ -1,0 +1,6 @@
+backend_servers:
+{% for controller in groups.controllers %}
+    - name: {{ hostvars[controller].inventory_hostname }}
+      address: {{ hostvars[controller].node_ip }}
+      port: 6443
+{% endfor %}
