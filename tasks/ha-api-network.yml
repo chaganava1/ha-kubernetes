@@ -42,19 +42,45 @@
         track_scripts:
           - chk_haproxy
 
-- name: Add HAProxy config
-  ansible.builtin.template:
-    src: haproxy.cfg.j2
-    dest: /etc/haproxy/haproxy.cfg
-    owner: root
-    group: root
-    mode: "0644"
+###
+# Deploy HA Proxy
+#
 
-- name: Start/Enable HAProxy
-  ansible.builtin.service:
-    name: haproxy
-    enabled: true
-    state: restarted
+- name: Set backend server var
+  ansible.builtin.template:
+    src: backend-servers.j2
+    dest: "{{ role_path }}/vars/backend-servers.yml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  delegate_to: localhost
+
+- name: Include backend_servers var
+  ansible.builtin.include_vars: backend-servers.yml
+
+- name: Deploy HAProxy
+  ansible.builtin.include_role:
+    name: robertdebock.haproxy
+  vars:
+    haproxy_frontends:
+      - name: k8s-api
+        address: "*"
+        port: "{{ haproxy_listen_port }}"
+        default_backend: k8s-api
+        mode: tcp
+        option: tcplog
+    haproxy_backend_default_balance: roundrobin
+    haproxy_backends:
+      - name: k8s-api
+        mode: tcp
+        httpcheck: false
+        option: tcplog
+        servers: "{{ backend_servers }}"
+        port: 6443
+        options:
+          - check
+          - check-ssl
+          - "verify none"
 
 - name: Wait for API Reachability
   ansible.builtin.wait_for:
