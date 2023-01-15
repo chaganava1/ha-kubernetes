@@ -2,7 +2,7 @@
 - name: Ensure lead_controller is set and valid
   ansible.builtin.assert:
     that:
-    - lead_controller is defined 
+    - lead_controller is defined
     - lead_controller in groups.controllers
     msg: "lead_controller is either not defined or not found in the controller group"
   run_once: true
