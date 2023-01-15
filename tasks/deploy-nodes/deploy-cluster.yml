@@ -47,6 +47,15 @@
       cni: "{{ cni }}"
       cidr: "{{ pod_subnet }}"
 
+- name: Hold kubernetes packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubeadm
+    - kubelet
+    - kubectl
+
 - name: Generate join credentials
   ansible.builtin.include_tasks: lead-controller.yml
   when: inventory_hostname == lead_controller
