@@ -48,7 +48,7 @@
       cidr: "{{ pod_subnet }}"
 
 - name: Hold kubernetes packages
-  dpkg_selections:
+  ansible.builtin.dpkg_selections:
     name: "{{ item }}"
     selection: hold
   loop:
