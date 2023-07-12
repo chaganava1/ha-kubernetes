@@ -31,7 +31,7 @@ Python packages:
 - dnspython (only when using FQDNs for ansible_host, see inventory configuration below)
 
 ~~~
-pip install dnspython
+pip install dnspython netaddr
 ~~~
 
 lead_controller
