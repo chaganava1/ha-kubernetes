@@ -46,6 +46,7 @@
     kubernetes_pod_network:
       cni: "{{ cni }}"
       cidr: "{{ pod_subnet }}"
+    kubernetes_calico_manifest_file: https://raw.githubusercontent.com/projectcalico/calico/v{{ calico_version }}/manifests/calico.yaml
 
 - name: Hold kubernetes packages
   ansible.builtin.dpkg_selections:
