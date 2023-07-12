@@ -30,10 +30,6 @@
   ansible.builtin.include_tasks: global/prep-redhat.yml
   when: ansible_os_family == 'RedHat'
 
-- name: Update packages
-  ansible.builtin.package:
-    update_cache: true
-
   ###
   # Install CRI
   #
