@@ -11,8 +11,8 @@
     state: absent
     line: disabled_plugins = ["cri"]
 
-- name: Set cri endpoints
-  ansible.builtin.command: crictl config --set runtime-endpoint=unix:///run/containerd/containerd.sock --set image-endpoint=unix:///run/containerd/containerd.sock
+#- name: Set cri endpoints
+#  ansible.builtin.command: crictl config --set runtime-endpoint=unix:///run/containerd/containerd.sock --set image-endpoint=unix:///run/containerd/containerd.sock
 
 - name: Restart containerd
   ansible.builtin.service:
