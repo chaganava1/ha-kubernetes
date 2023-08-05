@@ -42,6 +42,7 @@
     kubernetes_config_kubelet_configuration:
       cgroupDriver: "systemd"
       address: "{{ node_ip }}"
+      clusterDomain: "{{ cluster_domain }}"
       serializeImagePulls: false
     kubernetes_pod_network:
       cni: "{{ cni }}"
