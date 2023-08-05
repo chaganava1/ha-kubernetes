@@ -1,4 +1,10 @@
 ###
+# Cluster Info
+#
+
+cluster_domain: cluster.local
+
+###
 # Container runtime interface
 #
 cri: containerd
