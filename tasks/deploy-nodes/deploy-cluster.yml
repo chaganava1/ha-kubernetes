@@ -39,6 +39,7 @@
           - "{{ vrrp_virtual_ip }}"
           - "{{ ansible_host }}"
           - "{{ node_ip }}"
+      clusterName: "{{ cluster_name }}"
     kubernetes_config_kubelet_configuration:
       cgroupDriver: "systemd"
       address: "{{ node_ip }}"
