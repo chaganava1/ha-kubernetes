@@ -3,6 +3,7 @@
 #
 
 cluster_domain: cluster.local
+cluster_name: kubernetes
 
 ###
 # Container runtime interface
