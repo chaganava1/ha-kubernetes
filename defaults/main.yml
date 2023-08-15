@@ -4,7 +4,7 @@
 
 cluster_domain: cluster.local
 cluster_name: kubernetes
-kubernetes_version: "1.25"
+k8s_version: "1.25"
 
 ###
 # Container runtime interface
