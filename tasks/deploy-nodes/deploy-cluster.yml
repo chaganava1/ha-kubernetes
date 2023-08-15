@@ -22,7 +22,7 @@
   ansible.builtin.include_role:
     name: geerlingguy.kubernetes
   vars:
-    kubernetes_version: "{{ kubernetes_version }}"
+    kubernetes_version: "{{ k8s_version }}"
     kubernetes_config_init_configuration:
       localAPIEndpoint:
         advertiseAddress: "{{ node_ip }}"
